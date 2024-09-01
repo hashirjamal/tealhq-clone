@@ -1,0 +1,59 @@
+    const dummy2 = `
+    **Job Title:** Software Engineer
+
+**Location:** Hybrid (Remote/On-site)
+
+**Job Type:** Full-Time
+
+**Job Summary:**
+We are looking for a talented and motivated Software Engineer to join our innovative development team. The successful candidate will be responsible for designing, coding, testing, and deploying software solutions that meet our clients' needs. This role requires a strong foundation in software development, problem-solving skills, and the ability to work collaboratively in a fast-paced environment.
+
+**Key Responsibilities:**
+- Design, develop, and maintain scalable, high-performance software applications.
+- Write clean, efficient, and well-documented code following best practices and industry standards.
+- Collaborate with cross-functional teams, including product managers, designers, and QA engineers, to deliver high-quality software solutions.
+- Participate in code reviews, identify bugs, and implement effective fixes and improvements.
+- Stay updated with the latest industry trends and technologies, and apply them to enhance existing systems.
+- Contribute to the entire software development lifecycle, from requirements gathering to deployment and support.
+
+**Qualifications:**
+- Bachelor’s degree in Computer Science, Engineering, or a related field.
+- 3+ years of experience in software development, with proficiency in languages such as Java, Python, or JavaScript.
+- Experience with modern frameworks and libraries (e.g., React, Angular, Spring, Django).
+- Familiarity with version control systems (e.g., Git) and agile development methodologies.
+- Strong problem-solving skills and the ability to troubleshoot complex software issues.
+- Excellent communication skills and the ability to work both independently and as part of a team.
+
+**Salary:** Competitive, commensurate with experience
+
+**Benefits:** Health insurance, retirement plans, flexible work hours, learning and development programs, performance bonuses.
+
+**Application Deadline:** [Insert Date]`
+
+    const dummy = `Job Title: Marketing Manager
+
+Location: Remote
+
+Job Type: Full-Time
+
+Job Summary: We are seeking an experienced and creative Marketing Manager to join our dynamic team. The ideal candidate will be responsible for developing, implementing, and executing strategic marketing plans that drive brand awareness, customer acquisition, and revenue growth. This role requires strong leadership skills, a deep understanding of marketing channels, and the ability to analyze market trends and consumer behavior.
+
+Key Responsibilities:
+
+Develop and execute comprehensive marketing strategies across various channels, including digital, social media, email, and traditional marketing.
+Manage and optimize marketing campaigns to achieve business goals and maximize ROI.
+Conduct market research to identify trends, target audiences, and competitive landscape.
+Collaborate with cross-functional teams, including sales, product development, and design, to align marketing initiatives with company objectives.
+Monitor and report on the effectiveness of marketing activities, providing insights and recommendations for continuous improvement.
+Qualifications:
+
+Bachelor's degree in Marketing, Business, or a related field.
+5+ years of experience in marketing, with at least 2 years in a management role.
+Proven track record of successful marketing campaigns and brand development.
+Strong analytical skills and experience with marketing analytics tools.
+Excellent communication, leadership, and project management abilities.
+Salary: Competitive, based on experience
+
+Benefits: Health insurance, paid time off, remote work flexibility, professional development opportunities.
+
+Application Deadline: [Insert Date]`

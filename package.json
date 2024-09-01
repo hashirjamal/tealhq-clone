@@ -9,9 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@huggingface/inference": "^2.8.0",
+    "@pinecone-database/pinecone": "^3.0.2",
+    "axios": "^1.7.6",
+    "next": "14.2.7",
+    "node-fetch": "^3.3.2",
+    "pdf-parse": "^1.1.1",
+    "pdf2json": "^3.1.4",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.2.7"
+    "uuidv4": "^6.2.13"
   },
   "devDependencies": {
     "postcss": "^8",
