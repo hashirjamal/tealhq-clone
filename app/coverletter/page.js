@@ -121,7 +121,7 @@ ${userInfo.name}`
 
   <Tooltip title="Logout" placement="right">
   <Link href="/login" passHref> 
-        <IconButton sx={{ color: 'white',marginBottom:'12px' }} component="a">
+        <IconButton sx={{ color: 'white',marginBottom:'15px' }} component="a">
           <Logout />
         </IconButton>
         </Link>
