@@ -9,17 +9,23 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
     "@huggingface/inference": "^2.8.0",
+    "@mui/icons-material": "^6.0.1",
+    "@mui/material": "^6.0.1",
     "@pinecone-database/pinecone": "^3.0.2",
+    "aos": "^2.3.4",
     "axios": "^1.7.6",
-    "firebase": "^10.13.1",
+    "chart.js": "^4.4.4",
     "next": "14.2.7",
     "node-fetch": "^3.3.2",
     "pdf-parse": "^1.1.1",
     "pdf2json": "^3.1.4",
+    "pdfjs-dist": "^4.6.82",
     "react": "^18",
     "react-dom": "^18",
-    "uuidv4": "^6.2.13"
+    "firebase": "^10.13.1",
   },
   "devDependencies": {
     "postcss": "^8",
