@@ -2,7 +2,6 @@ import { embedResume } from "@/utils/embedResume";
 import { NextResponse } from "next/server";
 
 
-
 const pdf = require('pdf-parse');
 
 
