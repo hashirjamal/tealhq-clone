@@ -113,6 +113,17 @@ const CoverLetterPage = () => {
     doc.save(`${jobTitle} - ${company} Cover Letter.pdf`);
   };
 
+  function getJobMatchingHref() {
+    const storedUser = sessionStorage.getItem('user');
+  
+    if (storedUser) {
+      const userObject = JSON.parse(storedUser);
+      return userObject.userId ? '/jobmatching' : '/login';
+    }
+    
+    return '/login'; // Default to /login if no user is stored
+  }
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh", backgroundColor: "#f4f4f4" }}>
       
@@ -158,7 +169,7 @@ const CoverLetterPage = () => {
       </Link>
     </Tooltip>
     <Tooltip title="Job Matching" placement="right">
-      <Link href="/jobmatching" passHref> 
+      <Link href={getJobMatchingHref} passHref> 
         <IconButton sx={{ color: 'white' }} component="a">
           <WorkIcon />
         </IconButton>

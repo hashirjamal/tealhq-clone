@@ -12,8 +12,8 @@ import {
 import Link from 'next/link';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-// import { onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
-// import { auth } from '@/firebase.config';
+import { onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/firebase.config';
 
 const fadeIn = keyframes`
   from {
@@ -215,14 +215,14 @@ const Login = () => {
 	const [snackbarMessage, setSnackbarMessage] = useState('');
 	const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
-	// onAuthStateChanged(auth, (user) => {
-	// 	if (user) {
-	// 		sessionStorage.setItem(
-	// 			'user',
-	// 			JSON.stringify({ userId: user.uid })
-	// 		);
-	// 	}
-	// });
+	onAuthStateChanged(auth, (user) => {
+		if (user) {
+			sessionStorage.setItem(
+				'user',
+				JSON.stringify({ userId: user.uid })
+			);
+		}
+	});
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
@@ -230,7 +230,7 @@ const Login = () => {
 		console.log(email, password);
 
 		try {
-			// const res = await signInWithEmailAndPassword(auth, email, password);
+			const res = await signInWithEmailAndPassword(auth, email, password);
 
 			setSnackbarMessage('Login successful');
 			setSnackbarSeverity('success');
@@ -245,19 +245,19 @@ const Login = () => {
 			setSnackbarOpen(true);
 		}
 
-		// signInWithEmailAndPassword(auth,(auth,email,password))
-		// .then((user)=>{
+		signInWithEmailAndPassword(auth,(auth,email,password))
+		.then((user)=>{
 
-		//   setSnackbarMessage('Login successful');
-		//   setSnackbarSeverity('success');
-		//   setSnackbarOpen(true);
-		//   setTimeout(() => {
-		//     window.location.href = '/flashcard-generator';
-		//   }, 1500);// Delay to show Snackbar
-		// })
-		// .catch((e)=>{
+		  setSnackbarMessage('Login successful');
+		  setSnackbarSeverity('success');
+		  setSnackbarOpen(true);
+		  setTimeout(() => {
+		    window.location.href = '/jobmatching';
+		  }, 1500);// Delay to show Snackbar
+		})
+		.catch((e)=>{
 
-		// })
+		})
 	};
 
 	const togglePasswordVisibility = () => {

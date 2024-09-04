@@ -5,10 +5,13 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Box, Typography, Stack, Paper, Tabs, Tab, Link} from '@mui/material';
+import { Box, Stack, Paper, Tabs, Tab, Link, Typography, IconButton, Tooltip} from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
+import { Home, Description, Drafts, Logout } from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Close';
 import { Chart } from 'chart.js/auto';
+import WorkIcon from '@mui/icons-material/Work';
+import DescriptionIcon from '@mui/icons-material/Description';
 
 export default function ResultsPage() {
     const [scores, setScores] = useState({
@@ -417,7 +420,98 @@ export default function ResultsPage() {
         </Box>
     );
 
+    function getJobMatchingHref() {
+        const storedUser = sessionStorage.getItem('user');
+      
+        if (storedUser) {
+          const userObject = JSON.parse(storedUser);
+          return userObject.userId ? '/jobmatching' : '/login';
+        }
+        
+        return '/login'; // Default to /login if no user is stored
+      }
+
+    function getCoverLetterHref() {
+        const storedUser = sessionStorage.getItem('user');
+      
+        if (storedUser) {
+          const userObject = JSON.parse(storedUser);
+          return userObject.userId ? '/coverletter' : '/login';
+        }
+        
+        return '/login'; // Default to /login if no user is stored
+      }
+
     return (
+        <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh", backgroundColor: "#f4f4f4" }}>
+      
+        ;
+  
+  <Box
+    sx={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      height: '100%',
+      width: '60px',
+      backgroundColor: '#004d40',
+      borderRadius: '0 8px 8px 0',
+      zIndex: 10,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      paddingTop: '12px',
+      justifyContent: 'space-between', 
+    }}
+  >
+    <img
+      src="https://app.tealhq.com/content/images/teal_logo_small.svg"
+      alt="Teal Logo"
+      style={{ marginBottom: '24px', height: '32px' }}
+    />
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '70px', 
+        marginTop: 'auto',
+        marginBottom: 'auto',
+      }}
+    >
+      <Tooltip title="Home" placement="right">
+        <Link href="/" passHref> 
+          <IconButton sx={{ color: 'white' }} component="a">
+            <Home />
+          </IconButton>
+        </Link>
+      </Tooltip>
+      <Tooltip title="Job Matching" placement="right">
+        <Link href={getJobMatchingHref} passHref> 
+          <IconButton sx={{ color: 'white' }} component="a">
+            <WorkIcon />
+          </IconButton>
+        </Link>
+      </Tooltip>
+      <Tooltip title="Cover Letter Generator" placement="right">
+        <Link href={getCoverLetterHref} passHref> 
+          <IconButton sx={{ color: 'white' }} component="a">
+            <DescriptionIcon />
+          </IconButton>
+        </Link>
+      </Tooltip>
+    </Box>
+  
+    <Tooltip title="Logout" placement="right">
+    <Link href="/login" passHref> 
+          <IconButton sx={{ color: 'white',marginBottom:'15px' }} component="a">
+            <Logout />
+          </IconButton>
+          </Link>
+    </Tooltip>
+  </Box>
+
+
         <Box
         sx={{
             display: 'flex',
@@ -503,6 +597,7 @@ export default function ResultsPage() {
                 </Box>
             </Box>
             </Box>
+        </Box>
         </Box>
     );
 }

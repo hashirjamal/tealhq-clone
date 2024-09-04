@@ -47,6 +47,30 @@ export default function Home() {
         imgSrc: "https://cdn.prod.website-files.com/627c8700df0be67c4b1d533c/652dbeca9cb0d9da95bec672_Job_Match_Score_80-p-800.png",
       },
     ];
+
+    function getJobMatchingHref() {
+      const storedUser = sessionStorage.getItem('user');
+    
+      if (storedUser) {
+        const userObject = JSON.parse(storedUser);
+        return userObject.userId ? '/jobmatching' : '/login';
+      }
+      
+      return '/login'; // Default to /login if no user is stored
+    }
+
+    function getCoverLetterHref() {
+      const storedUser = sessionStorage.getItem('user');
+    
+      if (storedUser) {
+        const userObject = JSON.parse(storedUser);
+        return userObject.userId ? '/coverletter' : '/login';
+      }
+      
+      return '/login'; // Default to /login if no user is stored
+    }
+
+
   return (
     <div style={{ backgroundColor: '#fff', minHeight: '100vh',width: '100vw', }}>
       <Head>
@@ -97,7 +121,7 @@ export default function Home() {
               <HomeIcon sx={{ mr: 1 }} /> Home
             </Button>
           </Link>
-          <Link href="/jobmatching" passHref>
+          <Link href={getJobMatchingHref} passHref>
             <Button 
               color="inherit" 
               sx={{ 
@@ -119,7 +143,7 @@ export default function Home() {
               <WorkIcon sx={{ mr: 1 }} /> Job Matching
             </Button>
           </Link>
-          <Link href="/coverletter" passHref>
+          <Link href={getCoverLetterHref} passHref>
             <Button 
               color="inherit" 
               sx={{ 

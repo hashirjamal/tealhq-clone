@@ -146,7 +146,7 @@ const Signup = () => {
     }
 
     try {
-      // const res = await createUserWithEmailAndPassword(auth, email, password)
+      const res = await createUserWithEmailAndPassword(auth, email, password)
 
       console.log(res.user.uid + "hello")
 
@@ -154,7 +154,7 @@ const Signup = () => {
       setSnackbarMessage('Signup successful!');
       setSnackbarOpen(true);
       setTimeout(() => {
-        window.location.href = '/flashcard-generator';
+        window.location.href = '/jobmatching';
       }, 1500);
     } catch (e) {
       console.error(e);
