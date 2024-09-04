@@ -13,7 +13,7 @@ import Link from 'next/link';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '@/firebase.config';
+import { auth } from '../firebase.config';
 
 const fadeIn = keyframes`
   from {
