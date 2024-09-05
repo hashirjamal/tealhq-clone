@@ -5,10 +5,14 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Box, Typography, Stack, Paper, Tabs, Tab, Link} from '@mui/material';
+import { Box, Stack, Paper, Tabs, Tab, Link, Typography, IconButton, Tooltip} from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
+import { Home, Description, Drafts, Logout } from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Close';
 import { Chart } from 'chart.js/auto';
+import WorkIcon from '@mui/icons-material/Work';
+import DescriptionIcon from '@mui/icons-material/Description';
+
 
 export default function ResultsPage() {
     const [scores, setScores] = useState({
@@ -25,7 +29,9 @@ export default function ResultsPage() {
     const [hardSkills, setHardSkills] = useState({ available: [], lacking: [] });
     const [softSkills, setSoftSkills] = useState({ available: [], lacking: [] });
     const [resumeImprovements, setResumeImprovements] = useState([]);
-    
+    const [linkTag,setLinkTag] = useState("")
+
+
     const chartRef1 = useRef(null);
     const chartRef2 = useRef(null);
 
@@ -37,17 +43,20 @@ export default function ResultsPage() {
         // Extract the query parameter from the URL
         const queryParams = new URLSearchParams(window.location.search);
         const responseParam = queryParams.get('response');
-
+        
         if (responseParam) {
             try {
                 const parsedResponse = decodeURIComponent(responseParam);
-                const parsedResponseClean = parsedResponse.replace(/[\r\n]+/g, '').trim();
+                let parsedResponseClean = parsedResponse.replace(/[\r\n]+/g, '').trim();
+                parsedResponseClean = parsedResponseClean.replace(/`/g, '').trim();
+                parsedResponseClean = parsedResponseClean.replace(/\\n/g, '').replace(/\\"/g, '').trim();
                 console.log(parsedResponseClean);
                 const parsedData = JSON.parse(parsedResponseClean);
+                console.log(parsedData);
                 
                 // Extract and set data
                 setJobDescription(parsedData["job_description"]);
-                setWorkExperience(Object.values(parsedData["work_experience"]["relevant"]));
+                setWorkExperience(Object.values(parsedData["work_experience"]["relevant"][0]));
                 setHardSkills(parsedData["hard_skills"]);
                 setSoftSkills(parsedData["soft_skills"]);
                 setResumeImprovements(parsedData["resume_improvements"]);
@@ -417,7 +426,111 @@ export default function ResultsPage() {
         </Box>
     );
 
+    function getJobMatchingHref() {
+        // const storedUser = sessionStorage.getItem('user');
+      
+        // if (storedUser) {
+        //   const userObject = JSON.parse(storedUser);
+        //   return userObject.userId ? '/jobmatching' : '/login';
+        // }
+        
+        return "/jobmatching" //temporary LOC for testing purpose
+
+        // return '/login'; // Default to /login if no user is stored
+      }
+
+    function getCoverLetterHref() {
+
+        //temporarily commented the code for testing purpose
+        // const storedUser = sessionStorage.getItem('user');
+        // setLinkTag(()=>{
+        //     return  '/coverletter';
+        // })
+        return  '/coverletter';
+      
+        // if (storedUser) {
+        //     setLinkTag(()=>{
+        //         return userObject.userId ? '/coverletter' : '/login';
+        //     })
+        //   const userObject = JSON.parse(storedUser);
+        //   return userObject.userId ? '/coverletter' : '/login';
+        // }
+        
+        // setLinkTag(()=>{
+        //     return '/login'; // Default to /login if no user is stored
+        // })
+      }
+
     return (
+        <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh", backgroundColor: "#f4f4f4" }}>
+      
+        ;
+  
+  <Box
+    sx={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      height: '100%',
+      width: '60px',
+      backgroundColor: '#004d40',
+      borderRadius: '0 8px 8px 0',
+      zIndex: 10,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      paddingTop: '12px',
+      justifyContent: 'space-between', 
+    }}
+  >
+    <img
+      src="https://app.tealhq.com/content/images/teal_logo_small.svg"
+      alt="Teal Logo"
+      style={{ marginBottom: '24px', height: '32px' }}
+    />
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '70px', 
+        marginTop: 'auto',
+        marginBottom: 'auto',
+      }}
+    >
+      <Tooltip title="Home" placement="right">
+        <Link href="/" passHref> 
+          <IconButton sx={{ color: 'white' }} component="a">
+            <Home />
+          </IconButton>
+        </Link>
+      </Tooltip>
+      <Tooltip title="Job Matching" placement="right">
+        <Link href={getJobMatchingHref()} passHref> 
+          <IconButton sx={{ color: 'white' }} component="a">
+            <WorkIcon />
+          </IconButton>
+        </Link>
+      </Tooltip>
+      <Tooltip title="Cover Letter Generator" placement="right">
+        <Link href={getCoverLetterHref()} passHref> 
+          <IconButton sx={{ color: 'white' }} component="a">
+            <DescriptionIcon />
+          </IconButton>
+        </Link>
+      </Tooltip>
+    </Box>
+  
+    <Tooltip title="Logout" placement="right">
+    <Link href="/login" passHref> 
+          <IconButton sx={{ color: 'white',marginBottom:'15px' }} component="a">
+            <Logout />
+          </IconButton>
+          </Link>
+    </Tooltip>
+  </Box>
+
+
         <Box
         sx={{
             display: 'flex',
@@ -503,6 +616,7 @@ export default function ResultsPage() {
                 </Box>
             </Box>
             </Box>
+        </Box>
         </Box>
     );
 }

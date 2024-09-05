@@ -1,9 +1,77 @@
 import { NextResponse } from "next/server";
 
 export async function POST(req){
-
+  
     try{
-        const {jd, resume} = await req.json()
+        const {jd, resume, isCoverLetter} = await req.json()
+        var content = '';
+
+        const resumematch = `Match the resume with the given job description in JSON format when the relevant parts of the resume are provided by the user. The job description is as follows: ${jd}. Don't include any intro or conclusion, just return the JSON object strictly. Don't include how or why the score was calculated, just return the JSON in the following structure: 
+        {
+            "job_description": {
+                "title": "TITLE",
+                "company_name": "COMPANY_NAME",
+                "location": "LOCATION",
+                "role": "ROLE",
+                "skills_required": ["SKILL_1", "SKILL_2", "SKILL_3"]
+            },
+            "match": {
+                "overall_score": OVERALL_SCORE,
+                "structure_score": STRUCTURE_SCORE,
+                "results_score": RESULTS_SCORE,
+                "keyword_score": KEYWORD_SCORE
+            },
+            "hard_skills": {
+                "available": ["HARD_SKILL_1", "HARD_SKILL_2"],
+                "lacking": ["LACKING_HARD_SKILL_1", "LACKING_HARD_SKILL_2"]
+            },
+            "soft_skills": {
+                "available": ["SOFT_SKILL_1", "SOFT_SKILL_2"],
+                "lacking": ["LACKING_SOFT_SKILL_1", "LACKING_SOFT_SKILL_2"]
+            },
+            "work_experience": {
+                "relevant": ["WORK_EXPERIENCE_1" :
+                {
+                  "title": "TITLE",
+                  "company_name": "COMPANY_NAME",
+                  "location": "LOCATION",
+                  "role": "ROLE",
+                  "skills": ["SKILL_1", "SKILL_2", "SKILL_3"]
+                }
+                , "WORK_EXPERIENCE_2":
+                 {
+                  "title": "TITLE",
+                  "company_name": "COMPANY_NAME",
+                  "location": "LOCATION",
+                  "role": "ROLE",
+                  "skills": ["SKILL_1", "SKILL_2", "SKILL_3"]
+                }
+                  ]
+            },
+            "resume_improvements": [
+                "IMPROVEMENT_1",
+                "IMPROVEMENT_2"
+            ]
+        }`;
+
+        
+        const coverletter = `You need to generate a cover letter for the resume provided by the user and the job        description is as follows: ${jd}. Don't include any introduction or conclusion like here is the JSON, just return the JSON object strictly. Donot add any new line characters. Donot include Dear hiring manager in the start of the cover letter, or any thankyou with the name of the candidate at the end of the cover letter. Return the JSON in the following structure:
+          {
+              name: "NAME_OF_CANDIDATE",
+              address: "ADDRESS_OF_CANDIDATE",
+              phone: "PHONE_NUMBER_OF_CANDIDATE",
+              email: "EMAIL_OF_CANDIDATE",
+              jobTitle: "JOB_TITLE",
+              coverLetter: "COVER_LETTER"
+          } `;
+
+        if(isCoverLetter)
+        {
+          content = coverletter;
+        }
+        else{
+          content = resumematch;
+        }
 
         console.log(req.body,jd,resume)
 
@@ -18,53 +86,7 @@ export async function POST(req){
               "model": "meta-llama/llama-3.1-8b-instruct:free",
               "messages": [
                 {"role": "user", "content": resume},
-                {"role": "system", "content": `Match the resume with the given job description in JSON format when the relevant parts of the resume are provided by the user. The job description is as follows: ${jd}. Don't include any intro or conclusion, just return the JSON object strictly. Don't include how or why the score was calculated, just return the JSON in the following structure: 
-                        {
-                            "job_description": {
-                                "title": "TITLE",
-                                "company_name": "COMPANY_NAME",
-                                "location": "LOCATION",
-                                "role": "ROLE",
-                                "skills_required": ["SKILL_1", "SKILL_2", "SKILL_3"]
-                            },
-                            "match": {
-                                "overall_score": OVERALL_SCORE,
-                                "structure_score": STRUCTURE_SCORE,
-                                "results_score": RESULTS_SCORE,
-                                "keyword_score": KEYWORD_SCORE
-                            },
-                            "hard_skills": {
-                                "available": ["HARD_SKILL_1", "HARD_SKILL_2"],
-                                "lacking": ["LACKING_HARD_SKILL_1", "LACKING_HARD_SKILL_2"]
-                            },
-                            "soft_skills": {
-                                "available": ["SOFT_SKILL_1", "SOFT_SKILL_2"],
-                                "lacking": ["LACKING_SOFT_SKILL_1", "LACKING_SOFT_SKILL_2"]
-                            },
-                            "work_experience": {
-                                "relevant": ["WORK_EXPERIENCE_1" :
-                                {
-                                  "title": "TITLE",
-                                  "company_name": "COMPANY_NAME",
-                                  "location": "LOCATION",
-                                  "role": "ROLE",
-                                  "skills": ["SKILL_1", "SKILL_2", "SKILL_3"]
-                                }
-                                , "WORK_EXPERIENCE_2":
-                                 {
-                                  "title": "TITLE",
-                                  "company_name": "COMPANY_NAME",
-                                  "location": "LOCATION",
-                                  "role": "ROLE",
-                                  "skills": ["SKILL_1", "SKILL_2", "SKILL_3"]
-                                }
-                                  ]
-                            },
-                            "resume_improvements": [
-                                "IMPROVEMENT_1",
-                                "IMPROVEMENT_2"
-                            ]
-                        }`},
+                {"role": "system", "content": content},
               ],
             })
           });

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Box, Typography, Modal,IconButton,TextareaAutosize,Tooltip, TextField, Paper } from "@mui/material";
 import { jsPDF } from "jspdf";
 import { Home, Description, Drafts, Logout } from '@mui/icons-material';
@@ -9,32 +9,86 @@ import DescriptionIcon from '@mui/icons-material/Description';
 
 const CoverLetterPage = () => {
   
-  const [jobTitle, setJobTitle] = useState("Operations Manager");
-  const [company, setCompany] = useState("Acme Corp");
+  const [jobTitle, setJobTitle] = useState("");
+  const [jobDescription, setJobDescription] = useState("");
+  const [resume, setResume] = useState("");
+  const [company, setCompany] = useState("");
   const [open, setOpen] = useState(false);
-  const [coverLetter, setCoverLetter] = useState(
-    "Dear Hiring Manager, I am writing to express my interest in the Operations Manager position at Acme Corp..."
-  );
+  const [coverLetter, setCoverLetter] = useState("");
 
-  const userInfo = {
-    name: "Tazeen Amir",
-    address: "xyz",
-    phone: "02234-3344",
-    email: "tazeen75@icloud.com",
+  const [userInfo, setUserInfo] = useState({
+    name: "",
+    address: "",
+    phone: "",
+    email: "",
+  });
+
+  const fetchData = async () => {
+    // const response = await fetch('/api/your-endpoint');
+    // const data = await response.json();
+
+//     try {
+//       const res = await fetch('/api', {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({ jd: prompt, resume:resume , isCoverLetter: true}),
+//       });
+
+//       if (!res.ok) {
+//         throw new Error('Failed to fetch data from the API');
+//       }
+
+//       const data = await res.json();
+//       console.log(data)
+
+//     } catch (error: any) {
+//       setError(error.message);
+//     } finally {
+//       setLoading(false);
+//     }
+    const data = {
+          "name": "Eraj Tanweer",
+          "address": "Karachi, Pakistan",
+          "phone": "0333-2162005",
+          "email": "tanweer4503065@cloud.neduet.edu.pk",
+          "jobTitle": "Data Analyst",
+          "coverLetter": "I am writing to express my interest in the Data Analyst position at your esteemed organization. As a detail-oriented and analytical individual with a strong foundation in programming languages such as Python, JavaScript, and Java, I am confident that I would be an excellent fit for this role. With a proven track record of delivering high-quality results in a timely manner, I am well-equipped to transform raw data into structured information and drive strategic decision-making. My experience in working with Node.js, Express.js, and databases has also honed my skills in data analysis and interpretation. Furthermore, my participation in the NFL Big Data Bowl 2024 has given me hands-on experience in analyzing complex datasets and producing actionable business insights. I am particularly drawn to this role because of the opportunity to apply my analytical skills to drive business growth and improvement. In my previous roles, I have consistently demonstrated my ability to work under pressure, meet tight deadlines, and communicate complex data insights to non-technical audiences. I am excited about the prospect of joining your team and contributing my skills and expertise to drive success. I am confident that my unique blend of technical skills, analytical abilities, and passion for data analysis make me an ideal candidate for this position."
+      };
+      // check the format it is being recieved in.
+    return data;
   };
+
+  useEffect(() => {
+    const loadData = async () => {
+      // call the api here and load the entire response in fetchData() response after converting to JSON format.
+      const data = await fetchData();
+      setJobTitle(data.jobTitle);
+      setCompany(data.address); 
+      
+      setUserInfo(prevInfo => ({
+        ...prevInfo,
+        name: data.name || prevInfo.name,
+        address: data.address || prevInfo.address,
+        phone: data.phone || prevInfo.phone,
+        email: data.email || prevInfo.email
+      }));
+      setCoverLetter(`Dear Hiring Manager, 
+        ${data.coverLetter}
+        Sincerely,
+        ${data.name}`); 
+    };
+    loadData();
+  }, []);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const handleGenerate = () => {
     setCoverLetter(
-      `Dear Hiring Manager,
-
-I am writing to express my interest in the ${jobTitle} position at ${company}. With my background as a Web Developer at CODSOFT and OCTANET, I have honed my skills in ensuring operations are carried out in an appropriate and cost-effective manner...
-
-Sincerely,
-${userInfo.name}`
-    );
+      ``
+    ); // call the api here again
     handleClose();
   };
 
@@ -58,6 +112,26 @@ ${userInfo.name}`
     doc.text(coverLetter, 15, 90, { maxWidth: 180 }); 
     doc.save(`${jobTitle} - ${company} Cover Letter.pdf`);
   };
+
+    function getJobMatchingHref() {
+      try {
+        if(!sessionStorage)
+        {
+          return '/login';
+        }
+        const storedUser = sessionStorage.getItem('user');
+      
+        if (storedUser) {
+          const userObject = JSON.parse(storedUser);
+          return userObject.userId ? '/jobmatching' : '/login';
+        }
+        
+        return '/login'; // Default to /login if no user is stored
+      } catch (error) {
+        console.error('Error accessing or parsing sessionStorage:', error);
+        return '/login'; // Fallback URL in case of an error
+      }
+    }
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh", backgroundColor: "#f4f4f4" }}>
@@ -104,7 +178,7 @@ ${userInfo.name}`
       </Link>
     </Tooltip>
     <Tooltip title="Job Matching" placement="right">
-      <Link href="/jobmatching" passHref> 
+      <Link href={getJobMatchingHref()} passHref> 
         <IconButton sx={{ color: 'white' }} component="a">
           <WorkIcon />
         </IconButton>
@@ -250,16 +324,9 @@ ${userInfo.name}`
           </Typography>
           <TextField
             fullWidth
-            label="Job Title"
-            value={jobTitle}
-            onChange={(e) => setJobTitle(e.target.value)}
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            fullWidth
-            label="Company"
-            value={company}
-            onChange={(e) => setCompany(e.target.value)}
+            label="job description"
+            value={jobDescription}
+            onChange={(e) => setJobDescription(e.target.value)}
             sx={{ mb: 2 }}
           />
           <Button
