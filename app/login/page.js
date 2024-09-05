@@ -6,14 +6,12 @@ import {
 	Button,
 	Typography,
 	IconButton,
-	Snackbar,
-	Alert,
 } from '@mui/material';
 import Link from 'next/link';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '/firebase.config';
+import { auth } from '@/firebase.config';
 
 const fadeIn = keyframes`
   from {
@@ -231,6 +229,7 @@ const Login = () => {
 
 		try {
 			const res = await signInWithEmailAndPassword(auth, email, password);
+			console.log("signin done")
 
 			setSnackbarMessage('Login successful');
 			setSnackbarSeverity('success');

@@ -2,13 +2,35 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import { AppBar, Toolbar, Typography, Button, Container, Box, Grid } from '@mui/material';
-import React, { useEffect } from 'react';
+import React, { useEffect,useState } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import HomeIcon from '@mui/icons-material/Home';
 import WorkIcon from '@mui/icons-material/Work';
 import DescriptionIcon from '@mui/icons-material/Description';
+// import React, { useState, useEffect } from 'react';
 
+function getJobMatchingHref() {
+  const storedUser = sessionStorage.getItem('user');
+
+  if (storedUser) {
+    const userObject = JSON.parse(storedUser);
+    return userObject.userId ? '/jobmatching' : '/login';
+  }
+  
+  return '/login'; // Default to /login if no user is stored
+}
+
+function getCoverLetterHref() {
+  const storedUser = sessionStorage.getItem('user');
+
+  if (storedUser) {
+    const userObject = JSON.parse(storedUser);
+    return userObject.userId ? '/coverletter' : '/login';
+  }
+  
+  return '/login'; // Default to /login if no user is stored
+}
 export default function Home() {
     useEffect(() => {
       AOS.init({ duration: 1000 });
@@ -48,35 +70,13 @@ export default function Home() {
       },
     ];
 
-    function getJobMatchingHref() {
-      if(!sessionStorage)
-      {
-        return '/login';
-      }
-      const storedUser = sessionStorage.getItem('user');
-    
-      if (storedUser) {
-        const userObject = JSON.parse(storedUser);
-        return userObject.userId ? '/jobmatching' : '/login';
-      }
-      
-      return '/login'; // Default to /login if no user is stored
-    }
+    const [jobHref, setJobHref] = useState('/login');
+  const [coverLetterHref, setCoverLetterHref] = useState('/login');
 
-    function getCoverLetterHref() {
-      if(!sessionStorage)
-        {
-          return '/login';
-        }
-      const storedUser = sessionStorage.getItem('user');
-    
-      if (storedUser) {
-        const userObject = JSON.parse(storedUser);
-        return userObject.userId ? '/coverletter' : '/login';
-      }
-      
-      return '/login'; // Default to /login if no user is stored
-    }
+  useEffect(() => {
+    setJobHref(getJobMatchingHref());
+    setCoverLetterHref(getCoverLetterHref());
+  }, []);
 
 
   return (
@@ -129,7 +129,7 @@ export default function Home() {
               <HomeIcon sx={{ mr: 1 }} /> Home
             </Button>
           </Link>
-          <Link href={getJobMatchingHref()} passHref>
+          <Link href={jobHref} passHref>
             <Button 
               color="inherit" 
               sx={{ 
@@ -151,7 +151,7 @@ export default function Home() {
               <WorkIcon sx={{ mr: 1 }} /> Job Matching
             </Button>
           </Link>
-          <Link href={getCoverLetterHref()} passHref>
+          <Link href={coverLetterHref} passHref>
             <Button 
               color="inherit" 
               sx={{ 
@@ -243,7 +243,7 @@ export default function Home() {
             your resume aligns with the language, keywords, and skills from the job. See how your resume
             stacks up to any job.
           </Typography>
-          <Link href="/jobmatching" passHref>
+          <Link href={jobHref} passHref>
             <Button 
               variant="contained" 
               size="large" 
@@ -305,7 +305,7 @@ export default function Home() {
               marginTop:'30px'
             }} 
           >
-            Compare Your Resume to a Job Description
+            Generate a Tailored Cover Letter for Any Job
           </Typography>
 
           <Typography 
@@ -313,12 +313,9 @@ export default function Home() {
             paragraph 
             sx={{ color: 'grey.800' }} 
           >
-            The Resume Job Description Match tool allows you to quickly compare your existing resume
-            to the job description of any role. Get an instant match score with a breakdown of how well
-            your resume aligns with the language, keywords, and skills from the job. See how your resume
-            stacks up to any job.
+            The Cover Letter Generator helps you create a personalized cover letter that aligns with the job description of any role. Instantly craft a professional cover letter that highlights your skills, experiences, and qualifications. See how your unique qualities match the job requirements and communicate your value to potential employers effectively.
           </Typography>
-          <Link href="/coverletter" passHref>
+          <Link href={coverLetterHref} passHref>
             <Button 
               variant="contained" 
               size="large" 
@@ -332,7 +329,7 @@ export default function Home() {
                 marginTop:'20px'
               }}
             >
-              Compare Your Resume to a Job
+              Generate cover letter
             </Button>
           </Link>
         </Box>
@@ -457,7 +454,7 @@ export default function Home() {
         </Box>
         <Box sx={{ py: 6 }}>
   <Grid container justifyContent="center" sx={{ mt: -4, mb: 1 }}> 
-  <Link href="/jobmatching" passHref>
+  <Link href={jobHref} passHref>
   <Button
       variant="contained"
       color="primary"
@@ -724,7 +721,7 @@ export default function Home() {
         </Grid>
       </Grid>
     ))}
-     <Link href="/jobmatching" passHref>
+     <Link href={jobHref} passHref>
      <Button
   variant="contained"
   sx={{
@@ -901,4 +898,3 @@ export default function Home() {
     </div>
   );
 }
-

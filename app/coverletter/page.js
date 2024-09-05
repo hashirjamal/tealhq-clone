@@ -7,6 +7,16 @@ import Link from 'next/link';
 import WorkIcon from '@mui/icons-material/Work';
 import DescriptionIcon from '@mui/icons-material/Description';
 
+function getJobMatchingHref() {
+  const storedUser = sessionStorage.getItem('user');
+  if (storedUser) {
+    const userObject = JSON.parse(storedUser);
+    return userObject.userId ? '/jobmatching' : '/login';
+  }
+  return '/login'; // Default to /login if no user is stored
+}
+
+
 const CoverLetterPage = () => {
   
   const [jobTitle, setJobTitle] = useState("");
@@ -75,9 +85,9 @@ const CoverLetterPage = () => {
         email: data.email || prevInfo.email
       }));
       setCoverLetter(`Dear Hiring Manager, 
-        ${data.coverLetter}
-        Sincerely,
-        ${data.name}`); 
+      ${data.coverLetter}
+      Sincerely,
+      ${data.name}`); 
     };
     loadData();
   }, []);
@@ -112,27 +122,14 @@ const CoverLetterPage = () => {
     doc.text(coverLetter, 15, 90, { maxWidth: 180 }); 
     doc.save(`${jobTitle} - ${company} Cover Letter.pdf`);
   };
-
-    function getJobMatchingHref() {
-      try {
-        if(!sessionStorage)
-        {
-          return '/login';
-        }
-        const storedUser = sessionStorage.getItem('user');
-      
-        if (storedUser) {
-          const userObject = JSON.parse(storedUser);
-          return userObject.userId ? '/jobmatching' : '/login';
-        }
-        
-        return '/login'; // Default to /login if no user is stored
-      } catch (error) {
-        console.error('Error accessing or parsing sessionStorage:', error);
-        return '/login'; // Fallback URL in case of an error
-      }
-    }
-
+  
+    const [href, setHref] = useState('/login');
+  
+    useEffect(() => {
+      const result = getJobMatchingHref();
+      console.log('Generated href:', result);
+      setHref(result);
+    }, []);
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh", backgroundColor: "#f4f4f4" }}>
       
@@ -178,7 +175,7 @@ const CoverLetterPage = () => {
       </Link>
     </Tooltip>
     <Tooltip title="Job Matching" placement="right">
-      <Link href={getJobMatchingHref()} passHref> 
+      <Link href={href} passHref>
         <IconButton sx={{ color: 'white' }} component="a">
           <WorkIcon />
         </IconButton>

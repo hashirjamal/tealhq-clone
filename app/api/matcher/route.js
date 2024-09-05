@@ -6,7 +6,7 @@ export async function POST(req){
         const {jd, resume, isCoverLetter} = await req.json()
         var content = '';
 
-        const resumematch = `Match the resume with the given job description in JSON format when the relevant parts of the resume are provided by the user. The job description is as follows: ${jd}. Don't include any intro or conclusion, just return the JSON object strictly. Don't include how or why the score was calculated, just return the JSON in the following structure: 
+        const resumematch = `Match the resume with the given job description in JSON format when the relevant parts of the resume are provided by the user. The job description is as follows: ${jd}. Don't include any introduction or conclusion with the response, just return the JSON object strictly. Don't include how or why the score was calculated, just return the JSON in the following structure: 
         {
             "job_description": {
                 "title": "TITLE",
@@ -21,33 +21,30 @@ export async function POST(req){
                 "results_score": RESULTS_SCORE,
                 "keyword_score": KEYWORD_SCORE
             },
-            "hard_skills": {
-                "available": ["HARD_SKILL_1", "HARD_SKILL_2"],
-                "lacking": ["LACKING_HARD_SKILL_1", "LACKING_HARD_SKILL_2"]
-            },
-            "soft_skills": {
-                "available": ["SOFT_SKILL_1", "SOFT_SKILL_2"],
-                "lacking": ["LACKING_SOFT_SKILL_1", "LACKING_SOFT_SKILL_2"]
-            },
-            "work_experience": {
-                "relevant": ["WORK_EXPERIENCE_1" :
-                {
-                  "title": "TITLE",
-                  "company_name": "COMPANY_NAME",
-                  "location": "LOCATION",
-                  "role": "ROLE",
-                  "skills": ["SKILL_1", "SKILL_2", "SKILL_3"]
-                }
-                , "WORK_EXPERIENCE_2":
-                 {
-                  "title": "TITLE",
-                  "company_name": "COMPANY_NAME",
-                  "location": "LOCATION",
-                  "role": "ROLE",
-                  "skills": ["SKILL_1", "SKILL_2", "SKILL_3"]
-                }
-                  ]
-            },
+            "roadmap": 
+                  {
+                    "step 1": [
+                      "STEP_1_TASK_1",
+                      "STEP_1_TASK_2",
+                      "STEP_1_TASK_3"
+                    ],
+                    "step 2": [
+                      "STEP_2_TASK_1",
+                      "STEP_2_TASK_2",
+                      "STEP_2_TASK_3"
+                    ],
+                    "step 3": [
+                      "STEP_3_TASK_1",
+                      "STEP_3_TASK_2",
+                      "STEP_3_TASK_3"
+                    ],
+                    "step 4": [
+                      "STEP_4_TASK1",
+                      "STEP_4_TASK_2",
+                      "STEP_4_TASK_3"
+                    ]
+                  }
+            ,
             "resume_improvements": [
                 "IMPROVEMENT_1",
                 "IMPROVEMENT_2"

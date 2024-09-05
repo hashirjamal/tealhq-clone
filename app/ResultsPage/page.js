@@ -25,11 +25,8 @@ export default function ResultsPage() {
     const [companyName, setCompanyName] = useState('');
     const [tabValue, setTabValue] = useState(0); // State to handle tabs
     const [jobDescription, setJobDescription] = useState(null);
-    const [workExperience, setWorkExperience] = useState([]);
-    const [hardSkills, setHardSkills] = useState({ available: [], lacking: [] });
-    const [softSkills, setSoftSkills] = useState({ available: [], lacking: [] });
+    const [roadmap, setRoadMap] = useState([]);
     const [resumeImprovements, setResumeImprovements] = useState([]);
-    const [linkTag,setLinkTag] = useState("")
 
 
     const chartRef1 = useRef(null);
@@ -47,18 +44,19 @@ export default function ResultsPage() {
         if (responseParam) {
             try {
                 const parsedResponse = decodeURIComponent(responseParam);
+                console.log("response is:")
+                console.log(parsedResponse)
                 let parsedResponseClean = parsedResponse.replace(/[\r\n]+/g, '').trim();
                 parsedResponseClean = parsedResponseClean.replace(/`/g, '').trim();
                 parsedResponseClean = parsedResponseClean.replace(/\\n/g, '').replace(/\\"/g, '').trim();
-                console.log(parsedResponseClean);
+                // console.log(parsedResponseClean);
                 const parsedData = JSON.parse(parsedResponseClean);
+                console.log("response is as follows: ")
                 console.log(parsedData);
                 
                 // Extract and set data
                 setJobDescription(parsedData["job_description"]);
-                setWorkExperience(Object.values(parsedData["work_experience"]["relevant"][0]));
-                setHardSkills(parsedData["hard_skills"]);
-                setSoftSkills(parsedData["soft_skills"]);
+                setRoadMap(parsedData["roadmap"]);
                 setResumeImprovements(parsedData["resume_improvements"]);
 
                 const Role = parsedData["job_description"]?.title || 'No Job Title';
@@ -68,8 +66,9 @@ export default function ResultsPage() {
                 setCompanyName(company);
 
                 const responseScore = parsedData["match"]["overall_score"];
+                
                 if (!isNaN(responseScore)) {
-                    setScore(responseScore * 100);
+                    setScore(parseInt(responseScore * 100));
                 }
                 setScores({
                     structure_score: parsedData["match"].structure_score * 100,
@@ -259,121 +258,7 @@ export default function ResultsPage() {
             </Typography>
         </Box>
     );
-    
 
-    const renderWorkExperienceTab = () => {
-        const renderWorkExperienceCard = (exp) => (
-            <Box sx={{
-                p: 3,
-                backgroundColor: '#fdfdfd',
-                borderRadius: '12px',
-                borderLeft: '10px solid #004d40',
-                borderRight: '10px solid #004d40',
-                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                width: '100%',
-                maxWidth: '400px', // Adjust width as needed
-                overflow: 'hidden',
-                mb: 2, // Margin bottom for spacing between rows
-                mx: 'auto',  // Horizontally center
-                mt: 'auto',  // Vertically center
-                
-            }}>
-                <Typography variant="h6" sx={{
-                    fontWeight: 'bold',
-                    fontSize: '1.25rem',
-                    color: '#004d40',
-                    mb: 1,
-                }}>
-                    {exp.title}
-                </Typography>
-                <Typography variant="body1">Company: {exp.company_name}</Typography>
-                <Typography variant="body1">Location: {exp.location}</Typography>
-                <Typography variant="body1">Role: {exp.role}</Typography>
-                <Typography variant="body1">Skills: {exp.skills.join(', ')}</Typography>
-            </Box>
-        );
-    
-        return (
-            <Box sx={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: 4, // Gap between cards
-                justifyContent: 'center',
-            }}>
-                {workExperience.map((exp, index) => (
-                    <Box key={index} sx={{ flex: '1 1 300px' }}>
-                        {renderWorkExperienceCard(exp)}
-                    </Box>
-                ))}
-            </Box>
-        );
-    };
-
-    const renderSkillsTab = () => {
-        const renderSkillsCard = (title, skills) => (
-            <Box sx={{
-                p: 3,
-                backgroundColor: '#fdfdfd',
-                borderRadius: '12px',
-                borderLeft: '10px solid #004d40',
-                borderRight: '10px solid #004d40',
-                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                width: '100%',
-                maxWidth: '450px',
-                overflow: 'hidden',
-            }}>
-                <Typography variant="h6" sx={{
-                    fontWeight: 'bold',
-                    fontSize: '1.5rem',
-                    color: '#004d40',
-                    mb: 2,
-                    textAlign: 'center',
-                }}>
-                    {title}
-                </Typography>
-                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                    {skills.map((skill, index) => (
-                        <Box key={index} sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            p: 1,
-                            borderBottom: '1px solid #ddd',
-                        }}>
-                            <Typography variant="body1">{skill.name}</Typography>
-                            {skill.status ? <CheckIcon sx={{ color: '#4caf50' }} /> : <CloseIcon sx={{ color: '#f44336' }} />}
-                        </Box>
-                    ))}
-                </Box>
-            </Box>
-        );
-    
-        const hardSkillsData = [
-            ...hardSkills.available.map(skill => ({ name: skill, status: true })),
-            ...hardSkills.lacking.map(skill => ({ name: skill, status: false })),
-        ];
-    
-        const softSkillsData = [
-            ...softSkills.available.map(skill => ({ name: skill, status: true })),
-            ...softSkills.lacking.map(skill => ({ name: skill, status: false })),
-        ];
-    
-        return (
-            <Box sx={{
-                display: 'flex',
-                justifyContent: 'space-around',
-                flexWrap: 'wrap',
-                gap: 4, // Gap between cards
-            }}>
-                <Box sx={{ flex: '1 1 45%' }}>
-                    {renderSkillsCard('Hard Skills', hardSkillsData)}
-                </Box>
-                <Box sx={{ flex: '1 1 45%' }}>
-                    {renderSkillsCard('Soft Skills', softSkillsData)}
-                </Box>
-            </Box>
-        );
-    };
 
     const renderImprovementsTab = () => (
         <Box sx={{
@@ -426,35 +311,91 @@ export default function ResultsPage() {
         </Box>
     );
 
-    function getJobMatchingHref() {
-        if(!sessionStorage)
-            {
-              return '/login';
-            }
-        const storedUser = sessionStorage.getItem('user');
-      
-        if (storedUser) {
-          const userObject = JSON.parse(storedUser);
-          return userObject.userId ? '/jobmatching' : '/login';
-        }
+    const renderRoadMapCard = (stepTitle, tasks) => (
+        <Box sx={{
+            p: 3,
+            backgroundColor: '#fdfdfd',
+            borderRadius: '12px',
+            borderLeft: '10px solid #004d40',
+            borderRight: '10px solid #004d40',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+            width: '100%',
+            maxWidth: '400px', // Adjust width as needed
+            overflow: 'hidden',
+            mb: 2, // Margin bottom for spacing between rows
+            mx: 'auto', // Horizontally center
+            mt: 'auto', // Vertically center
+        }}>
+            <Typography variant="h6" sx={{
+                fontWeight: 'bold',
+                fontSize: '1.25rem',
+                color: '#004d40',
+                mb: 1,
+            }}>
+                {stepTitle}
+            </Typography>
+            {tasks.length > 0 && (
+                <Box sx={{ mt: 1 }}>
+                    <ul style={{ listStyleType: 'disc', paddingLeft: '20px' }}>
+                        {tasks.map((task, index) => (
+                            <li key={index}>
+                                <Typography variant="body2">{task}</Typography>
+                            </li>
+                        ))}
+                    </ul>
+                </Box>
+            )}
+        </Box>
+    );
+    
+    // Function to render the roadmap tab
+    const renderRoadMapTab = () => {
+    
+        return (
+            <Box sx={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: 4, // Gap between cards
+                justifyContent: 'center',
+            }}>
+                {Object.keys(roadmap).map((stepTitle, index) => (
+                    <Box key={index} sx={{ flex: '1 1 300px' }}>
+                        {renderRoadMapCard(stepTitle, roadmap[stepTitle])}
+                    </Box>
+                ))}
+            </Box>
+        );
+    };
 
-        return '/login'; // Default to /login if no user is stored
+    function getJobMatchingHref() {
+        // if(!sessionStorage)
+        //     {
+        //       return '/login';
+        //     }
+        // const storedUser = sessionStorage.getItem('user');
+      
+        // if (storedUser) {
+        //   const userObject = JSON.parse(storedUser);
+        //   return userObject.userId ? '/jobmatching' : '/login';
+        // }
+
+        return '/jobmatching'; // Default to /login if no user is stored
       }
 
     function getCoverLetterHref() {
 
-        if(!sessionStorage)
-            {
-              return '/login';
-            }
-        const storedUser = sessionStorage.getItem('user');
+        // if(!sessionStorage)
+        //     {
+        //       return '/login';
+        //     }
+        // const storedUser = sessionStorage.getItem('user');
       
-        if (storedUser) {
-          const userObject = JSON.parse(storedUser);
-          return userObject.userId ? '/coverletter' : '/login';
-        }
+        // if (storedUser) {
+        //   const userObject = JSON.parse(storedUser);
+        //   return userObject.userId ? '/coverletter' : '/login';
+        // }
     
-        return '/login'; // Default to /login if no user is stored
+        return '/coverletter'; // Default to /login if no user is stored
       }
 
     return (
@@ -496,21 +437,21 @@ export default function ResultsPage() {
     >
       <Tooltip title="Home" placement="right">
         <Link href="/" passHref> 
-          <IconButton sx={{ color: 'white' }} component="a">
+          <IconButton sx={{ color: 'white' }} >
             <Home />
           </IconButton>
         </Link>
       </Tooltip>
       <Tooltip title="Job Matching" placement="right">
         <Link href={getJobMatchingHref()} passHref> 
-          <IconButton sx={{ color: 'white' }} component="a">
+          <IconButton sx={{ color: 'white' }} >
             <WorkIcon />
           </IconButton>
         </Link>
       </Tooltip>
       <Tooltip title="Cover Letter Generator" placement="right">
         <Link href={getCoverLetterHref()} passHref> 
-          <IconButton sx={{ color: 'white' }} component="a">
+          <IconButton sx={{ color: 'white' }} >
             <DescriptionIcon />
           </IconButton>
         </Link>
@@ -519,7 +460,7 @@ export default function ResultsPage() {
   
     <Tooltip title="Logout" placement="right">
     <Link href="/login" passHref> 
-          <IconButton sx={{ color: 'white',marginBottom:'15px' }} component="a">
+          <IconButton sx={{ color: 'white',marginBottom:'15px' }} >
             <Logout />
           </IconButton>
           </Link>
@@ -600,15 +541,13 @@ export default function ResultsPage() {
             <Box sx={{ mt: 3 }}>
                 <Tabs value={tabValue} onChange={handleChange} centered>
                     <Tab label={<Link href="#" underline="none" sx={{ color: '#004d40', fontWeight: 'bold' }}>Job Description</Link>} />
-                    <Tab label={<Link href="#" underline="none" sx={{ color: '#004d40', fontWeight: 'bold' }}>Work Experience</Link>} />
-                    <Tab label={<Link href="#" underline="none" sx={{ color: '#004d40', fontWeight: 'bold' }}>Skills</Link>} />
+                    <Tab label={<Link href="#" underline="none" sx={{ color: '#004d40', fontWeight: 'bold' }}>Road Map</Link>} />
                     <Tab label={<Link href="#" underline="none" sx={{ color: '#004d40', fontWeight: 'bold' }}>Improvements</Link>} />
                 </Tabs>
                 <Box sx={{ p: 2 }}>
                     {tabValue === 0 && renderJobDescriptionTab()}
-                    {tabValue === 1 && renderWorkExperienceTab()}
-                    {tabValue === 2 && renderSkillsTab()}
-                    {tabValue === 3 && renderImprovementsTab()}
+                    {tabValue === 1 && renderRoadMapTab()}
+                    {tabValue === 2 && renderImprovementsTab()}
                 </Box>
             </Box>
             </Box>
