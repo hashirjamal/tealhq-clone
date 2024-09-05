@@ -49,6 +49,10 @@ export default function Home() {
     ];
 
     function getJobMatchingHref() {
+      if(!sessionStorage)
+      {
+        return '/login';
+      }
       const storedUser = sessionStorage.getItem('user');
     
       if (storedUser) {
@@ -60,6 +64,10 @@ export default function Home() {
     }
 
     function getCoverLetterHref() {
+      if(!sessionStorage)
+        {
+          return '/login';
+        }
       const storedUser = sessionStorage.getItem('user');
     
       if (storedUser) {

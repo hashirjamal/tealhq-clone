@@ -265,6 +265,22 @@ window.location.href = `/ResultsPage?response=${encodedData}`;
     setSnackbarOpen(false);
   };
 
+  function getCoverLetterHref() {
+
+    if(!sessionStorage)
+        {
+          return '/login';
+        }
+    const storedUser = sessionStorage.getItem('user');
+  
+    if (storedUser) {
+      const userObject = JSON.parse(storedUser);
+      return userObject.userId ? '/coverletter' : '/login';
+    }
+
+    return '/login'; // Default to /login if no user is stored
+  }
+
   return (
     <div
       style={{
@@ -324,7 +340,7 @@ window.location.href = `/ResultsPage?response=${encodedData}`;
             </Link>
           </Tooltip>
           <Tooltip title="Cover Letter Generator" placement="right">
-            <Link href="/coverletter" passHref>
+            <Link href={getCoverLetterHref()} passHref>
               <IconButton sx={{ color: 'white' }} component="a">
                 <DescriptionIcon />
               </IconButton>

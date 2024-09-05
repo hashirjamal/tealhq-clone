@@ -427,38 +427,34 @@ export default function ResultsPage() {
     );
 
     function getJobMatchingHref() {
-        // const storedUser = sessionStorage.getItem('user');
+        if(!sessionStorage)
+            {
+              return '/login';
+            }
+        const storedUser = sessionStorage.getItem('user');
       
-        // if (storedUser) {
-        //   const userObject = JSON.parse(storedUser);
-        //   return userObject.userId ? '/jobmatching' : '/login';
-        // }
-        
-        return "/jobmatching" //temporary LOC for testing purpose
+        if (storedUser) {
+          const userObject = JSON.parse(storedUser);
+          return userObject.userId ? '/jobmatching' : '/login';
+        }
 
-        // return '/login'; // Default to /login if no user is stored
+        return '/login'; // Default to /login if no user is stored
       }
 
     function getCoverLetterHref() {
 
-        //temporarily commented the code for testing purpose
-        // const storedUser = sessionStorage.getItem('user');
-        // setLinkTag(()=>{
-        //     return  '/coverletter';
-        // })
-        return  '/coverletter';
+        if(!sessionStorage)
+            {
+              return '/login';
+            }
+        const storedUser = sessionStorage.getItem('user');
       
-        // if (storedUser) {
-        //     setLinkTag(()=>{
-        //         return userObject.userId ? '/coverletter' : '/login';
-        //     })
-        //   const userObject = JSON.parse(storedUser);
-        //   return userObject.userId ? '/coverletter' : '/login';
-        // }
-        
-        // setLinkTag(()=>{
-        //     return '/login'; // Default to /login if no user is stored
-        // })
+        if (storedUser) {
+          const userObject = JSON.parse(storedUser);
+          return userObject.userId ? '/coverletter' : '/login';
+        }
+    
+        return '/login'; // Default to /login if no user is stored
       }
 
     return (
