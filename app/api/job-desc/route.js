@@ -45,7 +45,7 @@ try{
         finalRes+=`${res.metadata.meta} \n`        
     }
     
-    console.log(finalRes);
+    console.log(finalRes+"POST JS RESPONSE");
 
 
     return NextResponse.json({status:"Succes",message:"Resume uploaded successfully",data:finalRes});

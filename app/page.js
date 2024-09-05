@@ -305,7 +305,7 @@ export default function Home() {
               marginTop:'30px'
             }} 
           >
-            Compare Your Resume to a Job Description
+            Generate a Tailored Cover Letter for Any Job
           </Typography>
 
           <Typography 
@@ -313,10 +313,7 @@ export default function Home() {
             paragraph 
             sx={{ color: 'grey.800' }} 
           >
-            The Resume Job Description Match tool allows you to quickly compare your existing resume
-            to the job description of any role. Get an instant match score with a breakdown of how well
-            your resume aligns with the language, keywords, and skills from the job. See how your resume
-            stacks up to any job.
+            The Cover Letter Generator helps you create a personalized cover letter that aligns with the job description of any role. Instantly craft a professional cover letter that highlights your skills, experiences, and qualifications. See how your unique qualities match the job requirements and communicate your value to potential employers effectively.
           </Typography>
           <Link href={coverLetterHref} passHref>
             <Button 
@@ -332,7 +329,7 @@ export default function Home() {
                 marginTop:'20px'
               }}
             >
-              Compare Your Resume to a Job
+              Generate cover letter
             </Button>
           </Link>
         </Box>
@@ -724,7 +721,7 @@ export default function Home() {
         </Grid>
       </Grid>
     ))}
-     <Link href="/jobmatching" passHref>
+     <Link href={jobHref} passHref>
      <Button
   variant="contained"
   sx={{

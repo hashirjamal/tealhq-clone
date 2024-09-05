@@ -16,6 +16,12 @@ function getJobMatchingHref() {
   return '/login'; // Default to /login if no user is stored
 }
 
+const handleLogout = () => {
+  sessionStorage.removeItem('user');
+  console.log("User logged out successfully");
+  window.location.href = '/login';
+};
+
 
 const CoverLetterPage = () => {
   
@@ -213,12 +219,11 @@ const CoverLetterPage = () => {
   </Box>
 
   <Tooltip title="Logout" placement="right">
-  <Link href="/login" passHref> 
-        <IconButton sx={{ color: 'white',marginBottom:'15px' }} component="a">
-          <Logout />
-        </IconButton>
-        </Link>
-  </Tooltip>
+          <IconButton sx={{ color: 'white', marginBottom: '15px' }} onClick={handleLogout}>
+            <Logout />
+          </IconButton>
+        </Tooltip>
+
 </Box>
       <Box sx={{ display: "flex", flexDirection: "column", marginLeft: "70px", minHeight: "100vh", backgroundColor: "#f4f4f4" }}>
         <Typography

@@ -73,6 +73,8 @@ export async function POST(req){
           content = resumematch;
         }
 
+        console.log(req.body,jd,resume)
+
         const resumescore = await fetch("https://openrouter.ai/api/v1/chat/completions", {
             method: "POST",
             headers: {
@@ -90,6 +92,8 @@ export async function POST(req){
           });
           
           const resumeresponse = await resumescore.json();
+
+          console.log("\n\n",resumeresponse,"Resume Response");
         return NextResponse.json(resumeresponse.choices[0].message.content);
     }
     catch(e){

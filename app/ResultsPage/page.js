@@ -13,6 +13,7 @@ import { Chart } from 'chart.js/auto';
 import WorkIcon from '@mui/icons-material/Work';
 import DescriptionIcon from '@mui/icons-material/Description';
 
+
 export default function ResultsPage() {
     const [scores, setScores] = useState({
         structure_score: 0,
@@ -28,7 +29,9 @@ export default function ResultsPage() {
     const [hardSkills, setHardSkills] = useState({ available: [], lacking: [] });
     const [softSkills, setSoftSkills] = useState({ available: [], lacking: [] });
     const [resumeImprovements, setResumeImprovements] = useState([]);
-    
+    const [linkTag,setLinkTag] = useState("")
+
+
     const chartRef1 = useRef(null);
     const chartRef2 = useRef(null);
 
@@ -40,17 +43,20 @@ export default function ResultsPage() {
         // Extract the query parameter from the URL
         const queryParams = new URLSearchParams(window.location.search);
         const responseParam = queryParams.get('response');
-
+        
         if (responseParam) {
             try {
                 const parsedResponse = decodeURIComponent(responseParam);
-                const parsedResponseClean = parsedResponse.replace(/[\r\n]+/g, '').trim();
+                let parsedResponseClean = parsedResponse.replace(/[\r\n]+/g, '').trim();
+                parsedResponseClean = parsedResponseClean.replace(/`/g, '').trim();
+                parsedResponseClean = parsedResponseClean.replace(/\\n/g, '').replace(/\\"/g, '').trim();
                 console.log(parsedResponseClean);
                 const parsedData = JSON.parse(parsedResponseClean);
+                console.log(parsedData);
                 
                 // Extract and set data
                 setJobDescription(parsedData["job_description"]);
-                setWorkExperience(Object.values(parsedData["work_experience"]["relevant"]));
+                setWorkExperience(Object.values(parsedData["work_experience"]["relevant"][0]));
                 setHardSkills(parsedData["hard_skills"]);
                 setSoftSkills(parsedData["soft_skills"]);
                 setResumeImprovements(parsedData["resume_improvements"]);
@@ -421,24 +427,33 @@ export default function ResultsPage() {
     );
 
     function getJobMatchingHref() {
+        if(!sessionStorage)
+            {
+              return '/login';
+            }
         const storedUser = sessionStorage.getItem('user');
       
         if (storedUser) {
           const userObject = JSON.parse(storedUser);
           return userObject.userId ? '/jobmatching' : '/login';
         }
-        
+
         return '/login'; // Default to /login if no user is stored
       }
 
     function getCoverLetterHref() {
+
+        if(!sessionStorage)
+            {
+              return '/login';
+            }
         const storedUser = sessionStorage.getItem('user');
       
         if (storedUser) {
           const userObject = JSON.parse(storedUser);
           return userObject.userId ? '/coverletter' : '/login';
         }
-        
+    
         return '/login'; // Default to /login if no user is stored
       }
 
@@ -487,14 +502,14 @@ export default function ResultsPage() {
         </Link>
       </Tooltip>
       <Tooltip title="Job Matching" placement="right">
-        <Link href={getJobMatchingHref} passHref> 
+        <Link href={getJobMatchingHref()} passHref> 
           <IconButton sx={{ color: 'white' }} component="a">
             <WorkIcon />
           </IconButton>
         </Link>
       </Tooltip>
       <Tooltip title="Cover Letter Generator" placement="right">
-        <Link href={getCoverLetterHref} passHref> 
+        <Link href={getCoverLetterHref()} passHref> 
           <IconButton sx={{ color: 'white' }} component="a">
             <DescriptionIcon />
           </IconButton>

@@ -5,6 +5,9 @@ import { TextField, Button, Typography, IconButton, Snackbar, Alert } from '@mui
 import Link from 'next/link';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from '/firebase.config';
+
 
 const fadeIn = keyframes`
   from {
@@ -176,7 +179,7 @@ const Signup = () => {
         <Header>
           <Title>Join Us,</Title>
           <Subtitle>Sign Up!</Subtitle>
-          <Description>Create your account and start generating flashcards.</Description>
+          <Description>Create your account and start matching</Description>
         </Header>
         <form onSubmit={handleSignup}>
           <StyledInput
