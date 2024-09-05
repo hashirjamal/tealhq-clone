@@ -22,6 +22,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import WorkIcon from '@mui/icons-material/Work';
 import DescriptionIcon from '@mui/icons-material/Description';
+import axios from "axios";
 
 const Login = () => {
   const [fileContent, setFileContent] = useState("");
@@ -30,6 +31,7 @@ const Login = () => {
   const [isJobDescriptionEmpty, setIsJobDescriptionEmpty] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [resumeContent,setResumeContent] = useState("")
   const canvasContainerRef = useRef();
 
   useEffect(() => {
@@ -37,6 +39,114 @@ const Login = () => {
     pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
   }, []);
 
+  const postResume = async (file)=>{
+
+    setIsLoading(true);
+    try{
+      
+      if(!file){
+        alert("PLease upload your resume");
+        return;
+      }
+      
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      let res = await fetch("/api/resume",{
+      method:"POST",
+      body: formData
+    })
+    res = await res.json();
+    console.log(res);
+  }
+  catch(e){
+    console.log(e);
+  }
+  finally{
+    setIsLoading(false);
+
+  }
+    
+  
+    
+  }
+  
+  const genResult = async (jd,resume)=>{
+    const res = await axios.post("/api/matcher",{
+        jd,resume
+      }
+    );
+    console.log("Matcher response: ",res.data);
+    return res.data;
+  }
+
+
+  const sendToLLM = async(jd,resumeContent)=>{
+    const res = await axios.post("/api/summarize",{
+      jd,
+      resumeContent
+    }, {
+      headers: {
+        "Content-Type": "application/json"
+      }})
+  
+  // console.log(res.data.data.resume,"Summarization response");
+  return res.data.data;
+    }
+
+  const postJd = async (jd)=>{
+    try{
+      setIsLoading(true);
+      // const segments = jd.split('\n\n');
+      const dt = await axios.post("/api/job-desc",{
+        jd
+      }, {
+        headers: {
+          "Content-Type": "application/json"
+        }})
+        
+        console.log(dt.data.data,"POST JS RESPONSE");
+        // alert("postJd successful");
+        let cvContent = dt.data.data;
+
+        let summarizedVersion = await sendToLLM(jobDescription,cvContent);
+
+        console.log(summarizedVersion,"Summarized version of JD and Resume");
+
+        const finalRes = await genResult(summarizedVersion.jd,summarizedVersion.resume)
+
+
+        const encodedData = encodeURIComponent(JSON.stringify(finalRes));
+
+// Redirect to the ResultsPage with the encoded query parameter
+window.location.href = `/ResultsPage?response=${encodedData}`;
+
+      // setResumeContent(dt.data.data)
+      
+    //   let res = await fetch("/api/job-desc",{
+    //     method:"POST",
+    //     headers: {
+      //       "Content-Type": "application/json", // Ensure content type is set if sending JSON
+    //   },
+    //   body: jd
+    // })
+    
+    // console.log(res+"aaaaa");
+    
+    // res = await res.json();
+    
+    // alert(res.status)
+    // console.log(res+"aaaaa"); 
+  }catch(e){
+    console.log(e)
+  }
+  finally{
+    setIsLoading(false);
+  }
+    
+  }
+  
+  
   const handleFileUpload = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
@@ -46,7 +156,8 @@ const Login = () => {
     }
   
     if (file.type === "application/pdf") {
-      await renderPDFToCanvas(file);
+      renderPDFToCanvas(file);
+      await postResume(file);
     } else if (
       file.type ===
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -122,20 +233,32 @@ const Login = () => {
     setIsJobDescriptionEmpty(false);
   };
 
-  const handleSubmit = () => {
-    if (!jobDescription) {
-      setIsJobDescriptionEmpty(true);
-      setSnackbarOpen(true);
-      return;
+  const handleSubmit = async () => {
+    try{
+
+      if (!jobDescription) {
+        setIsJobDescriptionEmpty(true);
+        setSnackbarOpen(true);
+        return;
+      }
+      
+      setIsLoading(true);
+      
+    await postJd(jobDescription);
+    
+    // setTimeout(() => {
+      //   setIsLoading(false);
+      //   console.log("File Content:", fileContent);
+      //   console.log("Job Description:", jobDescription);
+      // }, 2000);
     }
-
-    setIsLoading(true);
-
-    setTimeout(() => {
+    catch(e){
+      console.log(e)
+    }
+    finally{
       setIsLoading(false);
-      console.log("File Content:", fileContent);
-      console.log("Job Description:", jobDescription);
-    }, 2000);
+
+    }
   };
 
   const handleSnackbarClose = () => {

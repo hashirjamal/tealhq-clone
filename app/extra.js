@@ -83,15 +83,11 @@ const page = () => {
   
 
 
-  const postResume = async ()=>{
+  const postResume = async (file)=>{
     if(!file){
       alert("PLease upload your resume");
       return;
     }
-
-
-
-
 
     const formData = new FormData();
     formData.append('file', file);
