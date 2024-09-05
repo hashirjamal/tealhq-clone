@@ -23,6 +23,15 @@ import "aos/dist/aos.css";
 import WorkIcon from '@mui/icons-material/Work';
 import DescriptionIcon from '@mui/icons-material/Description';
 
+function getJobMatchingHref() {
+  const storedUser = sessionStorage.getItem('user');
+  if (storedUser) {
+    const userObject = JSON.parse(storedUser);
+    return userObject.userId ? '/jobmatching' : '/login';
+  }
+  return '/login'; // Default to /login if no user is stored
+}
+
 const Login = () => {
   const [fileContent, setFileContent] = useState("");
   const [jobDescription, setJobDescription] = useState("");
@@ -32,6 +41,13 @@ const Login = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const canvasContainerRef = useRef();
 
+  const [href, setHref] = useState('/login'); // Initial value
+
+  useEffect(() => {
+    // Update href when component mounts
+    const result = getJobMatchingHref();
+    setHref(result);
+  }, []);
   useEffect(() => {
     AOS.init({ duration: 800 });
     pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
@@ -194,12 +210,12 @@ const Login = () => {
             </Link>
           </Tooltip>
           <Tooltip title="Job Matching" placement="right">
-            <Link href="/jobmatching" passHref>
-              <IconButton sx={{ color: 'white' }} component="a">
-                <WorkIcon />
-              </IconButton>
-            </Link>
-          </Tooltip>
+      <Link href={href} passHref>
+        <IconButton sx={{ color: 'white' }} component="a">
+          <WorkIcon />
+        </IconButton>
+      </Link>
+    </Tooltip>
           <Tooltip title="Cover Letter Generator" placement="right">
             <Link href="/coverletter" passHref>
               <IconButton sx={{ color: 'white' }} component="a">
