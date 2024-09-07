@@ -14,6 +14,7 @@ import WorkIcon from '@mui/icons-material/Work';
 import DescriptionIcon from '@mui/icons-material/Description';
 
 
+
 export default function ResultsPage() {
     const [scores, setScores] = useState({
         structure_score: 0,
@@ -463,8 +464,7 @@ export default function ResultsPage() {
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh", backgroundColor: "#f4f4f4" }}>
-      
-        ;
+   
   
   <Box
     sx={{
