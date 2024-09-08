@@ -6,6 +6,8 @@ import {
 	Button,
 	Typography,
 	IconButton,
+	Snackbar,
+	Alert,
 	CircularProgress,
 } from '@mui/material';
 import Link from 'next/link';
@@ -230,7 +232,6 @@ const Login = () => {
 
 		try {
 			const res = await signInWithEmailAndPassword(auth, email, password);
-			console.log("signin done")
 			setSnackbarMessage('Login successful');
 			setSnackbarSeverity('success');
 			setSnackbarOpen(true);

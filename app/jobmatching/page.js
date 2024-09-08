@@ -54,6 +54,7 @@ const Login = () => {
   const canvasContainerRef = useRef();
 
   const [open,setOpen] = useState(false);
+  const [href, setHref] = useState('/login'); // Add state for href
   const [cvUrl,setCvUrl] = useState(null);
 
   useEffect(() => {
@@ -62,8 +63,10 @@ const Login = () => {
   }, []);
   useEffect(() => {
     AOS.init({ duration: 800 });
-    pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
-    
+    //  pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.mjs'
+    // pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.mjs";
+    // pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.mjs";
+    pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.mjs';
     const getResume = async ()=>{
 
       
@@ -339,46 +342,6 @@ window.location.href = `/ResultsPage?response=${encodedData}`;
   };
   
 
-
-
-
-  // const renderPDFToCanvas = async (file) => {
-  //   try {
-  //     const reader = new FileReader();
-  //     reader.onload = async (e) => {
-  //       const typedArray = new Uint8Array(e.target.result);
-  //       const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise;
-
-  //       canvasContainerRef.current.innerHTML = "";
-
-  //       const scale = 0.9;
-
-  //       for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-  //         const page = await pdf.getPage(pageNum);
-  //         const viewport = page.getViewport({ scale });
-
-  //         const canvas = document.createElement("canvas");
-  //         const context = canvas.getContext("2d");
-  //         canvas.height = viewport.height;
-  //         canvas.width = viewport.width;
-
-  //         const renderContext = {
-  //           canvasContext: context,
-  //           viewport: viewport,
-  //         };
-  //         await page.render(renderContext).promise;
-
-  //         canvas.style.marginBottom = "2px";
-
-  //         canvasContainerRef.current.appendChild(canvas);
-  //       }
-  //     };
-  //     reader.readAsArrayBuffer(file);
-  //   } catch (error) {
-  //     setFileContent(`Error reading file: ${error.message}`);
-  //   }
-  // };
-
   const readDOCX = async (file) => {
     try {
       const reader = new FileReader();
@@ -486,6 +449,7 @@ window.location.href = `/ResultsPage?response=${encodedData}`;
             boxShadow: 24,
             p: 4,
             borderRadius: "8px",
+            color:'black'
           }}
         >
           <Typography variant="h6" gutterBottom>

@@ -245,9 +245,10 @@ export default function ResultsPage() {
             }}>
                 Role
             </Typography>
-            <Typography variant="body1" sx={{ mb: 2 }}>
-                {jobDescription?.role || 'Role not specified'}
-            </Typography>
+            <Typography variant="body1" sx={{ mb: 2, color: 'black' }}>
+  {jobDescription?.role || 'Role not specified'}
+</Typography>
+
             <Typography variant="h6" sx={{
                 fontWeight: 'bold',
                 fontSize: '1.25rem',
