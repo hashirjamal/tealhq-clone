@@ -18,6 +18,7 @@ import Link from "next/link";
 import { Home, Logout } from "@mui/icons-material";
 import * as pdfjsLib from "pdfjs-dist/build/pdf";
 import * as mammoth from "mammoth";
+import { pdfjs } from 'react-pdf';
 import AOS from "aos";
 import "aos/dist/aos.css";
 import WorkIcon from '@mui/icons-material/Work';
@@ -32,7 +33,11 @@ function getJobMatchingHref() {
   }
   return '/login'; // Default to /login if no user is stored
 }
-
+const handleLogout = () => {
+  sessionStorage.removeItem('user');
+  console.log("User logged out successfully");
+  window.location.href = '/';
+};
 const Login = () => {
   const [fileContent, setFileContent] = useState("");
   const [jobDescription, setJobDescription] = useState("");
@@ -46,13 +51,12 @@ const Login = () => {
   const [href, setHref] = useState('/login'); // Initial value
 
   useEffect(() => {
-    // Update href when component mounts
     const result = getJobMatchingHref();
     setHref(result);
   }, []);
   useEffect(() => {
     AOS.init({ duration: 800 });
-    pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.mjs";
   }, []);
 
   const postResume = async (file)=>{
@@ -135,6 +139,7 @@ const Login = () => {
         const encodedData = encodeURIComponent(JSON.stringify(finalRes));
 
 // Redirect to the ResultsPage with the encoded query parameter
+// window.location.href = `/ResultsPage?response=${encodedData}`;
 window.location.href = `/ResultsPage?response=${encodedData}`;
 
       // setResumeContent(dt.data.data)
@@ -364,11 +369,9 @@ window.location.href = `/ResultsPage?response=${encodedData}`;
           </Tooltip>
         </Box>
         <Tooltip title="Logout" placement="right">
-        <Link href="/login" passHref>
-              <IconButton sx={{ color: 'white',marginBottom:'15px'}} component="a">
-                <Logout />
-              </IconButton>
-            </Link>
+          <IconButton sx={{ color: 'white', marginBottom: '15px' }} onClick={handleLogout}>
+            <Logout />
+          </IconButton>
         </Tooltip>
         
       </Box>

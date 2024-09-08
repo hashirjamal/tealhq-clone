@@ -19,7 +19,7 @@ function getJobMatchingHref() {
 const handleLogout = () => {
   sessionStorage.removeItem('user');
   console.log("User logged out successfully");
-  window.location.href = '/login';
+  window.location.href = '/';
 };
 
 
@@ -65,10 +65,10 @@ const CoverLetterPage = () => {
 //       setLoading(false);
 //     }
     const data = {
-          "name": "Eraj Tanweer",
+          "name": "Muhammad Ali",
           "address": "Karachi, Pakistan",
-          "phone": "0333-2162005",
-          "email": "tanweer4503065@cloud.neduet.edu.pk",
+          "phone": "0333-2135600",
+          "email": "MuhammadAli@cloud.neduet.edu.pk",
           "jobTitle": "Data Analyst",
           "coverLetter": "I am writing to express my interest in the Data Analyst position at your esteemed organization. As a detail-oriented and analytical individual with a strong foundation in programming languages such as Python, JavaScript, and Java, I am confident that I would be an excellent fit for this role. With a proven track record of delivering high-quality results in a timely manner, I am well-equipped to transform raw data into structured information and drive strategic decision-making. My experience in working with Node.js, Express.js, and databases has also honed my skills in data analysis and interpretation. Furthermore, my participation in the NFL Big Data Bowl 2024 has given me hands-on experience in analyzing complex datasets and producing actionable business insights. I am particularly drawn to this role because of the opportunity to apply my analytical skills to drive business growth and improvement. In my previous roles, I have consistently demonstrated my ability to work under pressure, meet tight deadlines, and communicate complex data insights to non-technical audiences. I am excited about the prospect of joining your team and contributing my skills and expertise to drive success. I am confident that my unique blend of technical skills, analytical abilities, and passion for data analysis make me an ideal candidate for this position."
       };

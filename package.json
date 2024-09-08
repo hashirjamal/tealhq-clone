@@ -18,7 +18,6 @@
     "aos": "^2.3.4",
     "axios": "^1.7.6",
     "chart.js": "^4.4.4",
-    
     "docx4js": "^3.2.20",
     "firebase": "^10.13.1",
     "jspdf": "^2.5.1",
@@ -30,6 +29,7 @@
     "pdfjs-dist": "^4.5.136",
     "react": "^18",
     "react-dom": "^18",
+    "react-pdf": "^9.1.0",
     "uuid": "^10.0.0"
   },
   "devDependencies": {

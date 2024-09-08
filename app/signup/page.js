@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { styled, keyframes } from '@mui/material/styles';
-import { TextField, Button, Typography, IconButton, Snackbar, Alert } from '@mui/material';
+import { TextField, Button, Typography,CircularProgress, IconButton, Snackbar, Alert } from '@mui/material';
 import Link from 'next/link';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -130,6 +130,7 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
@@ -148,19 +149,23 @@ const Signup = () => {
       return;
     }
 
-    try {
-      const res = await createUserWithEmailAndPassword(auth, email, password)
+    setLoading(true);
 
-      console.log(res.user.uid + "hello")
+    try {
+      const res = await createUserWithEmailAndPassword(auth, email, password);
 
       sessionStorage.setItem('user', JSON.stringify({ userId: res.user.uid }));
       setSnackbarMessage('Signup successful!');
       setSnackbarOpen(true);
       setTimeout(() => {
-        window.location.href = '/jobmatching';
+        window.location.href = '/';
       }, 1500);
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error(error);
+      setSnackbarMessage('Signup failed. Please try again.');
+      setSnackbarOpen(true);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -224,7 +229,9 @@ const Signup = () => {
               </Typography>
             </Link>
           </FooterLinks>
-          <StyledButton type="submit">Sign Up</StyledButton>
+          <StyledButton type="submit" disabled={loading}>
+            {loading ? <CircularProgress size={24} style={{ color: '#fff' }} /> : 'Sign Up'}
+          </StyledButton>
         </form>
       </FormContainer>
       <Snackbar

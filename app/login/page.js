@@ -8,6 +8,7 @@ import {
 	IconButton,
 	Snackbar,
 	Alert,
+	CircularProgress,
 } from '@mui/material';
 import Link from 'next/link';
 import Visibility from '@mui/icons-material/Visibility';
@@ -214,6 +215,7 @@ const Login = () => {
 	const [snackbarOpen, setSnackbarOpen] = useState(false);
 	const [snackbarMessage, setSnackbarMessage] = useState('');
 	const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+	const [loading, setLoading] = useState(false); // State to manage loading
 
 	onAuthStateChanged(auth, (user) => {
 		if (user) {
@@ -226,38 +228,24 @@ const Login = () => {
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
-
-		console.log(email, password);
+		setLoading(true); // Start loading
 
 		try {
 			const res = await signInWithEmailAndPassword(auth, email, password);
-
 			setSnackbarMessage('Login successful');
 			setSnackbarSeverity('success');
 			setSnackbarOpen(true);
 			setTimeout(() => {
 				window.location.href = '/';
-			}, 1500); 
+			}, 1500);
 		} catch (e) {
 			console.log(e);
 			setSnackbarMessage('Invalid email or password');
 			setSnackbarSeverity('error');
 			setSnackbarOpen(true);
+		} finally {
+			setLoading(false); // Stop loading
 		}
-
-		signInWithEmailAndPassword(auth,(auth,email,password))
-		.then((user)=>{
-
-		  setSnackbarMessage('Login successful');
-		  setSnackbarSeverity('success');
-		  setSnackbarOpen(true);
-		  setTimeout(() => {
-		    window.location.href = '/jobmatching';
-		  }, 1500);// Delay to show Snackbar
-		})
-		.catch((e)=>{
-
-		})
 	};
 
 	const togglePasswordVisibility = () => {
@@ -316,16 +304,24 @@ const Login = () => {
 								</Typography>
 							</Link>
 						</FooterLinks>
-						<StyledButton type="submit">Log In</StyledButton>
+						<StyledButton type="submit" disabled={loading}>
+							{loading ? <CircularProgress size={24} color="inherit" /> : 'Log In'}
+						</StyledButton>
 					</form>
 				</FormContainer>
-				
 			</ContentContainer>
-
-			
+			<Snackbar
+				open={snackbarOpen}
+				autoHideDuration={6000}
+				onClose={handleCloseSnackbar}
+				anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+			>
+				<Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
+					{snackbarMessage}
+				</Alert>
+			</Snackbar>
 		</Container>
 	);
 };
 
 export default Login;
-
