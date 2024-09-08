@@ -12,6 +12,7 @@ try{
     console.log(body)
 
     const {jd} = body;
+    const {id} = body;
 
     let hf = new HfInference(process.env.HF_KEY)
 
@@ -32,9 +33,24 @@ try{
     });
     const index = pc.index("teal-hq-resume-store");
 
+
+
+
+const getUser = await index.namespace(`user ${id}`).listPaginated();
+// const getUser = await index.namespace(`user ${id}removeMe`).listPaginated();
+console.log("Namespace values in pinecone",getUser);
+
+if(getUser.vectors.length==0){
+    let resObj = {
+        status:"Error",
+        message:"Please upload your resume first"
+    }
+    
+    return NextResponse.json(resObj);
+}
     
     
-    let result = await index.namespace('user Abc123').query({
+    let result = await index.namespace(`user ${id}`).query({
         topK: 3,
         vector: vecArr,
         includeMetadata: true

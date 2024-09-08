@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { Pinecone } from '@pinecone-database/pinecone';
 import { Button, Box, Typography, Modal,IconButton,TextareaAutosize,Tooltip, TextField, Paper } from "@mui/material";
 import { jsPDF } from "jspdf";
 import { Home, Description, Drafts, Logout } from '@mui/icons-material';
@@ -39,11 +40,16 @@ const CoverLetterPage = () => {
 
   const postJd = async (jd)=>{
     try{
+      let user = sessionStorage.getItem("user");
+      
+      let id = sessionStorage.getItem("user");
+    id = JSON.parse(id).userId;
       console.log("Calling cover letter");
       // setIsLoading(true);
       // const segments = jd.split('\n\n');
       const dt = await axios.post("/api/job-desc",{
-        jd:jobDescription
+        jd:jobDescription,
+        id
       }, {
         headers: {
           "Content-Type": "application/json"
@@ -120,12 +126,12 @@ const genResult = async (jd,resume,isCoverLetter)=>{
 //       setLoading(false);
 //     }
     let data = {
-          "name": "Eraj Tanweer",
-          "address": "Karachi, Pakistan",
-          "phone": "0333-2162005",
-          "email": "tanweer4503065@cloud.neduet.edu.pk",
-          "jobTitle": "Data Analyst",
-          "coverLetter": "I am writing to express my interest in the Data Analyst position at your esteemed organization. As a detail-oriented and analytical individual with a strong foundation in programming languages such as Python, JavaScript, and Java, I am confident that I would be an excellent fit for this role. With a proven track record of delivering high-quality results in a timely manner, I am well-equipped to transform raw data into structured information and drive strategic decision-making. My experience in working with Node.js, Express.js, and databases has also honed my skills in data analysis and interpretation. Furthermore, my participation in the NFL Big Data Bowl 2024 has given me hands-on experience in analyzing complex datasets and producing actionable business insights. I am particularly drawn to this role because of the opportunity to apply my analytical skills to drive business growth and improvement. In my previous roles, I have consistently demonstrated my ability to work under pressure, meet tight deadlines, and communicate complex data insights to non-technical audiences. I am excited about the prospect of joining your team and contributing my skills and expertise to drive success. I am confident that my unique blend of technical skills, analytical abilities, and passion for data analysis make me an ideal candidate for this position."
+          "name": "[YOUR NAME]",
+          "address": "[City, Country]",
+          "phone": "[YOUR CONTACT NO.]",
+          "email": "[YOUR EMAIL]",
+          "jobTitle": "[JOB TITLE]",
+          "coverLetter": "[DUMMY DATA] I am writing to express my interest in the Data Analyst position at your esteemed organization. As a detail-oriented and analytical individual with a strong foundation in programming languages such as Python, JavaScript, and Java, I am confident that I would be an excellent fit for this role. With a proven track record of delivering high-quality results in a timely manner, I am well-equipped to transform raw data into structured information and drive strategic decision-making. My experience in working with Node.js, Express.js, and databases has also honed my skills in data analysis and interpretation. Furthermore, my participation in the NFL Big Data Bowl 2024 has given me hands-on experience in analyzing complex datasets and producing actionable business insights. I am particularly drawn to this role because of the opportunity to apply my analytical skills to drive business growth and improvement. In my previous roles, I have consistently demonstrated my ability to work under pressure, meet tight deadlines, and communicate complex data insights to non-technical audiences. I am excited about the prospect of joining your team and contributing my skills and expertise to drive success. I am confident that my unique blend of technical skills, analytical abilities, and passion for data analysis make me an ideal candidate for this position."
       };
 
       // let llmRes = await postJd();
@@ -162,10 +168,16 @@ const genResult = async (jd,resume,isCoverLetter)=>{
 
   const handleGenerate = async () => {
 
+
+    
+
+
+
+
     let llmRes = await postJd();
 
-    llmRes = JSON.parse(llmRes)
     console.log(llmRes)
+    llmRes = JSON.parse(llmRes)
 
     setCoverLetter(
       `${llmRes.coverLetter}`

@@ -9,7 +9,7 @@ export async function POST(req){
 
         const {jd} = body;
         const {resumeContent} = body;
-        const{isCoverLetter}=  body;
+       
 
         const hf = new HfInference(`${process.env.HF_KEY}`);
 
@@ -18,11 +18,22 @@ export async function POST(req){
         if(jd.length>500){
             res = await summarizeContent(jd,100,350)
         }
+        else{
+            
+            res ={
+                summary_text:res
+            }
+        }
         
         let res2 = resumeContent;
 
         if(resumeContent.length>750){
             res2 = await summarizeContent(resumeContent,200,500)
+        }
+        else{
+            res2 ={
+                summary_text:res2
+            }
         }
 
         console.log(res,res2)

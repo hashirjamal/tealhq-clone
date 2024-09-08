@@ -6,7 +6,7 @@ export async function POST(req){
         const {jd, resume, isCoverLetter} = await req.json()
         var content = '';
 
-        console.log("Body of matcher API:"+isCoverLetter)
+        // console.log("Body of matcher API:"+isCoverLetter)
 
         const resumematch = `Match the resume with the given job description in JSON format when the relevant parts of the resume are provided by the user. The job description is as follows: ${jd}. Don't include any introduction or conclusion with the response, just return the JSON object strictly. Don't include how or why the score was calculated, just return the JSON in the following structure: 
         {
