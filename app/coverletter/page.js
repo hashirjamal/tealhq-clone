@@ -6,6 +6,19 @@ import { Home, Description, Drafts, Logout } from '@mui/icons-material';
 import Link from 'next/link'; 
 import WorkIcon from '@mui/icons-material/Work';
 import DescriptionIcon from '@mui/icons-material/Description';
+import axios from "axios";
+
+
+
+function getJobMatchingHref() {
+  const storedUser = sessionStorage.getItem('user');
+  if (storedUser) {
+    const userObject = JSON.parse(storedUser);
+    return userObject.userId ? '/jobmatching' : '/login';
+  }
+  return '/login'; // Default to /login if no user is stored
+}
+
 
 const CoverLetterPage = () => {
   
@@ -22,6 +35,64 @@ const CoverLetterPage = () => {
     phone: "",
     email: "",
   });
+
+
+  const postJd = async (jd)=>{
+    try{
+      console.log("Calling cover letter");
+      // setIsLoading(true);
+      // const segments = jd.split('\n\n');
+      const dt = await axios.post("/api/job-desc",{
+        jd:jobDescription
+      }, {
+        headers: {
+          "Content-Type": "application/json"
+        }})
+        
+        // console.log(dt.data.data,"POST JS RESPONSE");
+        // alert("postJd successful");
+        let cvContent = dt.data.data;
+
+        let summarizedVersion = await sendToLLM(jobDescription,cvContent);
+
+        // console.log(summarizedVersion,"Summarized version of JD and Resume");
+
+        const finalRes = await genResult(summarizedVersion.jd,summarizedVersion.resume,true)
+        console.log("Cover letter call finished")
+        return finalRes;
+
+  }
+  catch(e){
+    console.log(e);
+  }
+}
+  
+const sendToLLM = async(jd,resumeContent,isCoverLetter)=>{
+  const res = await axios.post("/api/summarize",{
+    jd,
+    resumeContent,
+    isCoverLetter
+  }, {
+    headers: {
+      "Content-Type": "application/json"
+    }})
+
+// console.log(res.data.data.resume,"Summarization response");
+return res.data.data;
+  }
+
+
+const genResult = async (jd,resume,isCoverLetter)=>{
+  const res = await axios.post("/api/matcher",{
+      jd,resume,isCoverLetter
+    }
+  );
+  // console.log("Matcher response: ",res.data);
+  return res.data;
+}
+
+
+
 
   const fetchData = async () => {
     // const response = await fetch('/api/your-endpoint');
@@ -48,7 +119,7 @@ const CoverLetterPage = () => {
 //     } finally {
 //       setLoading(false);
 //     }
-    const data = {
+    let data = {
           "name": "Eraj Tanweer",
           "address": "Karachi, Pakistan",
           "phone": "0333-2162005",
@@ -56,6 +127,10 @@ const CoverLetterPage = () => {
           "jobTitle": "Data Analyst",
           "coverLetter": "I am writing to express my interest in the Data Analyst position at your esteemed organization. As a detail-oriented and analytical individual with a strong foundation in programming languages such as Python, JavaScript, and Java, I am confident that I would be an excellent fit for this role. With a proven track record of delivering high-quality results in a timely manner, I am well-equipped to transform raw data into structured information and drive strategic decision-making. My experience in working with Node.js, Express.js, and databases has also honed my skills in data analysis and interpretation. Furthermore, my participation in the NFL Big Data Bowl 2024 has given me hands-on experience in analyzing complex datasets and producing actionable business insights. I am particularly drawn to this role because of the opportunity to apply my analytical skills to drive business growth and improvement. In my previous roles, I have consistently demonstrated my ability to work under pressure, meet tight deadlines, and communicate complex data insights to non-technical audiences. I am excited about the prospect of joining your team and contributing my skills and expertise to drive success. I am confident that my unique blend of technical skills, analytical abilities, and passion for data analysis make me an ideal candidate for this position."
       };
+
+      // let llmRes = await postJd();
+      
+
       // check the format it is being recieved in.
     return data;
   };
@@ -75,9 +150,9 @@ const CoverLetterPage = () => {
         email: data.email || prevInfo.email
       }));
       setCoverLetter(`Dear Hiring Manager, 
-        ${data.coverLetter}
-        Sincerely,
-        ${data.name}`); 
+      ${data.coverLetter}
+      Sincerely,
+      ${data.name}`); 
     };
     loadData();
   }, []);
@@ -85,9 +160,15 @@ const CoverLetterPage = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
+
+    let llmRes = await postJd();
+
+    llmRes = JSON.parse(llmRes)
+    console.log(llmRes)
+
     setCoverLetter(
-      ``
+      `${llmRes.coverLetter}`
     ); // call the api here again
     handleClose();
   };
@@ -112,27 +193,14 @@ const CoverLetterPage = () => {
     doc.text(coverLetter, 15, 90, { maxWidth: 180 }); 
     doc.save(`${jobTitle} - ${company} Cover Letter.pdf`);
   };
-
-    function getJobMatchingHref() {
-      try {
-        if(!sessionStorage)
-        {
-          return '/login';
-        }
-        const storedUser = sessionStorage.getItem('user');
-      
-        if (storedUser) {
-          const userObject = JSON.parse(storedUser);
-          return userObject.userId ? '/jobmatching' : '/login';
-        }
-        
-        return '/login'; // Default to /login if no user is stored
-      } catch (error) {
-        console.error('Error accessing or parsing sessionStorage:', error);
-        return '/login'; // Fallback URL in case of an error
-      }
-    }
-
+  
+    const [href, setHref] = useState('/login');
+  
+    useEffect(() => {
+      const result = getJobMatchingHref();
+      console.log('Generated href:', result);
+      setHref(result);
+    }, []);
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh", backgroundColor: "#f4f4f4" }}>
       
@@ -178,7 +246,7 @@ const CoverLetterPage = () => {
       </Link>
     </Tooltip>
     <Tooltip title="Job Matching" placement="right">
-      <Link href={getJobMatchingHref()} passHref> 
+      <Link href={href} passHref>
         <IconButton sx={{ color: 'white' }} component="a">
           <WorkIcon />
         </IconButton>

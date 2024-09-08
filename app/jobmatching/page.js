@@ -28,6 +28,15 @@ import WorkIcon from '@mui/icons-material/Work';
 import DescriptionIcon from '@mui/icons-material/Description';
 import axios from "axios";
 
+function getJobMatchingHref() {
+  const storedUser = sessionStorage.getItem('user');
+  if (storedUser) {
+    const userObject = JSON.parse(storedUser);
+    return userObject.userId ? '/jobmatching' : '/login';
+  }
+  return '/login'; // Default to /login if no user is stored
+}
+
 const Login = () => {
   const [fileContent, setFileContent] = useState("");
   const [jobDescription, setJobDescription] = useState("");
@@ -48,15 +57,20 @@ const Login = () => {
 
     setIsLoading(true);
     try{
-      
+      let id = sessionStorage.getItem("user");
+      id = JSON.parse(id).userId;
+        console.log("ID: "+id);
       if(!file){
         alert("PLease upload your resume");
         return;
       }
       
       setFile(file);
+      
+      
       const formData = new FormData();
       formData.append('file', file);
+      formData.append('id', id);
       
       let res = await fetch("/api/resume",{
       method:"POST",
@@ -84,13 +98,15 @@ const Login = () => {
         jd,resume
       }
     );
-    console.log("Matcher response: ",res.data);
+    // console.log("Matcher response: ",res.data);
     return res.data;
   }
 
   const saveResume = async (file)=>{
     if (!file) return;
-    const storageRef = ref(storage, `files/${file.name}`);
+
+    let id = sessionStorage.getItem("user").userId;
+    const storageRef = ref(storage, `files/${id}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on("state_changed",
@@ -135,13 +151,13 @@ const Login = () => {
           "Content-Type": "application/json"
         }})
         
-        console.log(dt.data.data,"POST JS RESPONSE");
+        // console.log(dt.data.data,"POST JS RESPONSE");
         // alert("postJd successful");
         let cvContent = dt.data.data;
 
         let summarizedVersion = await sendToLLM(jobDescription,cvContent);
 
-        console.log(summarizedVersion,"Summarized version of JD and Resume");
+        // console.log(summarizedVersion,"Summarized version of JD and Resume");
 
         const finalRes = await genResult(summarizedVersion.jd,summarizedVersion.resume)
 
@@ -363,6 +379,22 @@ window.location.href = `/ResultsPage?response=${encodedData}`;
     setSnackbarOpen(false);
   };
 
+  function getCoverLetterHref() {
+
+    if(!sessionStorage)
+        {
+          return '/login';
+        }
+    const storedUser = sessionStorage.getItem('user');
+  
+    if (storedUser) {
+      const userObject = JSON.parse(storedUser);
+      return userObject.userId ? '/coverletter' : '/login';
+    }
+
+    return '/login'; // Default to /login if no user is stored
+  }
+
   return (
     <div
       style={{
@@ -463,14 +495,14 @@ window.location.href = `/ResultsPage?response=${encodedData}`;
             </Link>
           </Tooltip>
           <Tooltip title="Job Matching" placement="right">
-            <Link href="/jobmatching" passHref>
-              <IconButton sx={{ color: 'white' }} component="a">
-                <WorkIcon />
-              </IconButton>
-            </Link>
-          </Tooltip>
+      <Link href={getJobMatchingHref()} passHref>
+        <IconButton sx={{ color: 'white' }} component="a">
+          <WorkIcon />
+        </IconButton>
+      </Link>
+    </Tooltip>
           <Tooltip title="Cover Letter Generator" placement="right">
-            <Link href="/coverletter" passHref>
+            <Link href={getCoverLetterHref()} passHref>
               <IconButton sx={{ color: 'white' }} component="a">
                 <DescriptionIcon />
               </IconButton>
