@@ -1,5 +1,9 @@
 "use client";
+
 import React, { useState, useEffect, useRef } from "react";
+import { storage } from "@/firebase.config";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import { Modal } from "@mui/material";
 import {
   Typography,
   Button,
@@ -40,16 +44,10 @@ const Login = () => {
   const [isJobDescriptionEmpty, setIsJobDescriptionEmpty] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [resumeContent,setResumeContent] = useState("")
+  const[cvFile,setFile] = useState(null);
   const canvasContainerRef = useRef();
+  const [open,setOpen] = useState(false);
 
-  const [href, setHref] = useState('/login'); // Initial value
-
-  useEffect(() => {
-    // Update href when component mounts
-    const result = getJobMatchingHref();
-    setHref(result);
-  }, []);
   useEffect(() => {
     AOS.init({ duration: 800 });
     pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
@@ -59,26 +57,34 @@ const Login = () => {
 
     setIsLoading(true);
     try{
-      
+      let id = sessionStorage.getItem("user");
+      id = JSON.parse(id).userId;
+        console.log("ID: "+id);
       if(!file){
         alert("PLease upload your resume");
         return;
       }
       
+      setFile(file);
+      
+      
       const formData = new FormData();
       formData.append('file', file);
+      formData.append('id', id);
       
       let res = await fetch("/api/resume",{
       method:"POST",
       body: formData
     })
     res = await res.json();
-    // console.log(res);
+    console.log(res);
+    
   }
   catch(e){
     console.log(e);
   }
   finally{
+    setOpen(true);
     setIsLoading(false);
 
   }
@@ -95,6 +101,31 @@ const Login = () => {
     // console.log("Matcher response: ",res.data);
     return res.data;
   }
+
+  const saveResume = async (file)=>{
+    if (!file) return;
+
+    let id = sessionStorage.getItem("user").userId;
+    const storageRef = ref(storage, `files/${id}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on("state_changed",
+      (snapshot) => {
+        const progress =
+          Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+        // setProgresspercent(progress);
+      },
+      (error) => {
+        alert(error);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          console.log(downloadURL)
+        });
+      }
+    );
+  }
+
 
   const sendToLLM = async(jd,resumeContent)=>{
     const res = await axios.post("/api/summarize",{
@@ -172,7 +203,8 @@ window.location.href = `/ResultsPage?response=${encodedData}`;
     }
   
     if (file.type === "application/pdf") {
-      renderPDFToCanvas(file);
+      // renderPDFToCanvas(file);
+      renderPDFToCanvas("https://firebasestorage.googleapis.com/v0/b/teal-hq-clone.appspot.com/o/files%2FHashir%20Jamal%20Khan%20CV.pdf?alt=media&token=c728b793-d792-461b-81d4-560980306cf9");
       await postResume(file);
     } else if (
       file.type ===
@@ -187,42 +219,101 @@ window.location.href = `/ResultsPage?response=${encodedData}`;
   };
   
 
-  const renderPDFToCanvas = async (file) => {
+  const renderPDFToCanvas = async (fileOrUrl) => {
     try {
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        const typedArray = new Uint8Array(e.target.result);
-        const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise;
-
-        canvasContainerRef.current.innerHTML = "";
-
-        const scale = 0.9;
-
-        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-          const page = await pdf.getPage(pageNum);
-          const viewport = page.getViewport({ scale });
-
-          const canvas = document.createElement("canvas");
-          const context = canvas.getContext("2d");
-          canvas.height = viewport.height;
-          canvas.width = viewport.width;
-
-          const renderContext = {
-            canvasContext: context,
-            viewport: viewport,
+      let typedArray;
+  
+      // Check if input is a file or URL
+      if (typeof fileOrUrl === 'string') {
+        // Fetch PDF from URL
+        let response = await axios.get(fileOrUrl);
+        response = response.data;
+        console.log(response);
+        const arrayBuffer = await response.arrayBuffer();
+        typedArray = new Uint8Array(arrayBuffer);
+      } else {
+        // Handle file input
+        const reader = new FileReader();
+        await new Promise((resolve, reject) => {
+          reader.onload = (e) => {
+            typedArray = new Uint8Array(e.target.result);
+            resolve();
           };
-          await page.render(renderContext).promise;
-
-          canvas.style.marginBottom = "2px";
-
-          canvasContainerRef.current.appendChild(canvas);
-        }
-      };
-      reader.readAsArrayBuffer(file);
+          reader.onerror = reject;
+          reader.readAsArrayBuffer(fileOrUrl);
+        });
+      }
+  
+      // Load the PDF document using pdf.js
+      const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise;
+      canvasContainerRef.current.innerHTML = "";
+  
+      const scale = 0.9;
+  
+      // Render each page of the PDF to the canvas
+      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+        const page = await pdf.getPage(pageNum);
+        const viewport = page.getViewport({ scale });
+  
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+  
+        const renderContext = {
+          canvasContext: context,
+          viewport: viewport,
+        };
+        await page.render(renderContext).promise;
+  
+        canvas.style.marginBottom = "2px";
+        canvasContainerRef.current.appendChild(canvas);
+      }
     } catch (error) {
       setFileContent(`Error reading file: ${error.message}`);
     }
   };
+  
+
+
+
+
+  // const renderPDFToCanvas = async (file) => {
+  //   try {
+  //     const reader = new FileReader();
+  //     reader.onload = async (e) => {
+  //       const typedArray = new Uint8Array(e.target.result);
+  //       const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise;
+
+  //       canvasContainerRef.current.innerHTML = "";
+
+  //       const scale = 0.9;
+
+  //       for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+  //         const page = await pdf.getPage(pageNum);
+  //         const viewport = page.getViewport({ scale });
+
+  //         const canvas = document.createElement("canvas");
+  //         const context = canvas.getContext("2d");
+  //         canvas.height = viewport.height;
+  //         canvas.width = viewport.width;
+
+  //         const renderContext = {
+  //           canvasContext: context,
+  //           viewport: viewport,
+  //         };
+  //         await page.render(renderContext).promise;
+
+  //         canvas.style.marginBottom = "2px";
+
+  //         canvasContainerRef.current.appendChild(canvas);
+  //       }
+  //     };
+  //     reader.readAsArrayBuffer(file);
+  //   } catch (error) {
+  //     setFileContent(`Error reading file: ${error.message}`);
+  //   }
+  // };
 
   const readDOCX = async (file) => {
     try {
@@ -260,6 +351,14 @@ window.location.href = `/ResultsPage?response=${encodedData}`;
       
       setIsLoading(true);
       
+
+      //on Page load automatically check if the resume is already there in the db their if yes then load that pdf into renderPDFToCanvas and pass the uid id to the job-desc api which will be used by the pc.query function as the namespace
+      // if the resume is not there in the db then let the user will upload the db and then show a popup asking him to save this resume for future use if he/she says yes then call the saveResume and proceed otherwise proceed directly
+
+
+
+
+
     await postJd(jobDescription);
     
     // setTimeout(() => {
@@ -309,6 +408,54 @@ window.location.href = `/ResultsPage?response=${encodedData}`;
         width: '100%',
       }}
     >
+
+         
+<Modal open={open} onClose={()=>setOpen(false)}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+            borderRadius: "8px",
+          }}
+        >
+          <Typography variant="h6" gutterBottom>
+            Do you want to save your resume for future use.
+            Previous resume (if any) will be overwritten
+          </Typography>
+
+          <div style={{"display":"flex","justifyContent":"space-between"}}>
+
+          
+          <Button
+            variant="contained"
+            sx={{ backgroundColor: "#FFB100", color: "#004d40", fontWeight: "bold" }}
+            onClick={()=>{
+              saveResume(cvFile)
+              setOpen(false);
+            }}
+            >
+            Yes
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ backgroundColor: "#FFB100", color: "#004d40", fontWeight: "bold" }}
+            onClick={()=>{
+
+              saveResume(cvFile);
+              setOpen(false);
+            }}
+            >
+            No
+          </Button>
+            </div>
+        </Box>
+      </Modal>
       <Box
         sx={{
           position: 'fixed',
@@ -349,7 +496,7 @@ window.location.href = `/ResultsPage?response=${encodedData}`;
             </Link>
           </Tooltip>
           <Tooltip title="Job Matching" placement="right">
-      <Link href={href} passHref>
+      <Link href={getJobMatchingHref()} passHref>
         <IconButton sx={{ color: 'white' }} component="a">
           <WorkIcon />
         </IconButton>

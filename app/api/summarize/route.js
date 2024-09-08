@@ -9,6 +9,7 @@ export async function POST(req){
 
         const {jd} = body;
         const {resumeContent} = body;
+        const{isCoverLetter}=  body;
 
         const hf = new HfInference(`${process.env.HF_KEY}`);
 
