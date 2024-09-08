@@ -16,6 +16,12 @@ function getJobMatchingHref() {
   return '/login'; // Default to /login if no user is stored
 }
 
+const handleLogout = () => {
+  sessionStorage.removeItem('user');
+  console.log("User logged out successfully");
+  window.location.href = '/';
+};
+
 
 const CoverLetterPage = () => {
   
@@ -122,6 +128,28 @@ const CoverLetterPage = () => {
     doc.text(coverLetter, 15, 90, { maxWidth: 180 }); 
     doc.save(`${jobTitle} - ${company} Cover Letter.pdf`);
   };
+
+  // function getJobMatchingHref() {
+  //   const storedUser = sessionStorage.getItem('user');
+  
+  //   if (storedUser) {
+  //     const userObject = JSON.parse(storedUser);
+  //     return userObject.userId ? '/jobmatching' : '/login';
+  //   }
+    
+  //   return '/login'; // Default to /login if no user is stored
+  // }
+  // console.log(getJobMatchingHref());
+  // function getJobMatchingHref() {
+  //   const storedUser = sessionStorage.getItem('user');
+  
+  //   if (storedUser) {
+  //     const userObject = JSON.parse(storedUser);
+  //     return userObject.userId ? '/jobmatching' : '/login';
+  //   }
+  
+  //   return '/login'; // Default to /login if no user is stored
+  // }
   
     const [href, setHref] = useState('/login');
   
@@ -191,12 +219,11 @@ const CoverLetterPage = () => {
   </Box>
 
   <Tooltip title="Logout" placement="right">
-  <Link href="/login" passHref> 
-        <IconButton sx={{ color: 'white',marginBottom:'15px' }} component="a">
-          <Logout />
-        </IconButton>
-        </Link>
-  </Tooltip>
+          <IconButton sx={{ color: 'white', marginBottom: '15px' }} onClick={handleLogout}>
+            <Logout />
+          </IconButton>
+        </Tooltip>
+
 </Box>
       <Box sx={{ display: "flex", flexDirection: "column", marginLeft: "70px", minHeight: "100vh", backgroundColor: "#f4f4f4" }}>
         <Typography

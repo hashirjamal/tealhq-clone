@@ -8,6 +8,7 @@ import { auth } from '/firebase.config';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
+
 const fadeIn = keyframes`
   from {
     opacity: 0;
@@ -178,7 +179,7 @@ const Signup = () => {
         <Header>
           <Title>Join Us,</Title>
           <Subtitle>Sign Up!</Subtitle>
-          <Description>Create your account and start generating flashcards.</Description>
+          <Description>Create your account and start matching</Description>
         </Header>
         <form onSubmit={handleSignup}>
           <StyledInput
