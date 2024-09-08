@@ -6,6 +6,9 @@ import { Home, Description, Drafts, Logout } from '@mui/icons-material';
 import Link from 'next/link'; 
 import WorkIcon from '@mui/icons-material/Work';
 import DescriptionIcon from '@mui/icons-material/Description';
+import axios from "axios";
+
+
 
 function getJobMatchingHref() {
   const storedUser = sessionStorage.getItem('user');
@@ -20,6 +23,7 @@ const handleLogout = () => {
   sessionStorage.removeItem('user');
   console.log("User logged out successfully");
   window.location.href = '/';
+  window.location.href = '/';
 };
 
 
@@ -31,6 +35,8 @@ const CoverLetterPage = () => {
   const [company, setCompany] = useState("");
   const [open, setOpen] = useState(false);
   const [coverLetter, setCoverLetter] = useState("");
+  const [resumeMissing, setResumeMissing] = useState(false);
+
 
   const [userInfo, setUserInfo] = useState({
     name: "",
@@ -39,42 +45,76 @@ const CoverLetterPage = () => {
     email: "",
   });
 
-  const fetchData = async () => {
-    // const response = await fetch('/api/your-endpoint');
-    // const data = await response.json();
 
-//     try {
-//       const res = await fetch('/api', {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({ jd: prompt, resume:resume , isCoverLetter: true}),
-//       });
+  const postJd = async (jd)=>{
+    try{
+      console.log("Calling cover letter");
+      // setIsLoading(true);
+      // const segments = jd.split('\n\n');
+      const dt = await axios.post("/api/job-desc",{
+        jd:jobDescription
+      }, {
+        headers: {
+          "Content-Type": "application/json"
+        }})
+        
+        // console.log(dt.data.data,"POST JS RESPONSE");
+        // alert("postJd successful");
+        let cvContent = dt.data.data;
 
-//       if (!res.ok) {
-//         throw new Error('Failed to fetch data from the API');
-//       }
+        let summarizedVersion = await sendToLLM(jobDescription,cvContent);
 
-//       const data = await res.json();
-//       console.log(data)
+        // console.log(summarizedVersion,"Summarized version of JD and Resume");
 
-//     } catch (error: any) {
-//       setError(error.message);
-//     } finally {
-//       setLoading(false);
-//     }
-    const data = {
-          "name": "Muhammad Ali",
-          "address": "Karachi, Pakistan",
-          "phone": "0333-2135600",
-          "email": "MuhammadAli@cloud.neduet.edu.pk",
-          "jobTitle": "Data Analyst",
-          "coverLetter": "I am writing to express my interest in the Data Analyst position at your esteemed organization. As a detail-oriented and analytical individual with a strong foundation in programming languages such as Python, JavaScript, and Java, I am confident that I would be an excellent fit for this role. With a proven track record of delivering high-quality results in a timely manner, I am well-equipped to transform raw data into structured information and drive strategic decision-making. My experience in working with Node.js, Express.js, and databases has also honed my skills in data analysis and interpretation. Furthermore, my participation in the NFL Big Data Bowl 2024 has given me hands-on experience in analyzing complex datasets and producing actionable business insights. I am particularly drawn to this role because of the opportunity to apply my analytical skills to drive business growth and improvement. In my previous roles, I have consistently demonstrated my ability to work under pressure, meet tight deadlines, and communicate complex data insights to non-technical audiences. I am excited about the prospect of joining your team and contributing my skills and expertise to drive success. I am confident that my unique blend of technical skills, analytical abilities, and passion for data analysis make me an ideal candidate for this position."
-      };
-      // check the format it is being recieved in.
-    return data;
+        const finalRes = await genResult(summarizedVersion.jd,summarizedVersion.resume,true)
+        console.log("Cover letter call finished")
+        return finalRes;
+
+  }
+  catch(e){
+    console.log(e);
+  }
+}
+  
+const sendToLLM = async(jd,resumeContent,isCoverLetter)=>{
+  const res = await axios.post("/api/summarize",{
+    jd,
+    resumeContent,
+    isCoverLetter
+  }, {
+    headers: {
+      "Content-Type": "application/json"
+    }})
+
+// console.log(res.data.data.resume,"Summarization response");
+return res.data.data;
+  }
+
+
+const genResult = async (jd,resume,isCoverLetter)=>{
+  const res = await axios.post("/api/matcher",{
+      jd,resume,isCoverLetter
+    }
+  );
+  // console.log("Matcher response: ",res.data);
+  return res.data;
+}
+
+
+
+
+const fetchData = async () => {
+  const data = {
+    "name": "Muhammad Ali",
+    "address": "Karachi, Pakistan",
+    "phone": "0333-2135600",
+    "email": "MuhammadAli@cloud.neduet.edu.pk",
+    "jobTitle": "Data Analyst",
+    "coverLetter": "I am writing to express my interest in the Data Analyst position at your esteemed organization. As a detail-oriented and analytical individual with a strong foundation in programming languages such as Python, JavaScript, and Java, I am confident that I would be an excellent fit for this role. With a proven track record of delivering high-quality results in a timely manner, I am well-equipped to transform raw data into structured information and drive strategic decision-making. My experience in working with Node.js, Express.js, and databases has also honed my skills in data analysis and interpretation. Furthermore, my participation in the NFL Big Data Bowl 2024 has given me hands-on experience in analyzing complex datasets and producing actionable business insights. I am particularly drawn to this role because of the opportunity to apply my analytical skills to drive business growth and improvement. In my previous roles, I have consistently demonstrated my ability to work under pressure, meet tight deadlines, and communicate complex data insights to non-technical audiences. I am excited about the prospect of joining your team and contributing my skills and expertise to drive success. I am confident that my unique blend of technical skills, analytical abilities, and passion for data analysis make me an ideal candidate for this position."
   };
+
+  return data;
+};
 
   useEffect(() => {
     const loadData = async () => {
@@ -91,9 +131,9 @@ const CoverLetterPage = () => {
         email: data.email || prevInfo.email
       }));
       setCoverLetter(`Dear Hiring Manager, 
-        ${data.coverLetter}
-        Sincerely,
-        ${data.name}`); 
+      ${data.coverLetter}
+      Sincerely,
+      ${data.name}`); 
     };
     loadData();
   }, []);
@@ -101,9 +141,15 @@ const CoverLetterPage = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
+
+    let llmRes = await postJd();
+
+    llmRes = JSON.parse(llmRes)
+    console.log(llmRes)
+
     setCoverLetter(
-      ``
+      `${llmRes.coverLetter}`
     ); // call the api here again
     handleClose();
   };
@@ -163,7 +209,7 @@ const CoverLetterPage = () => {
       
       ;
 
-<Box
+      <Box
   sx={{
     position: 'fixed',
     top: 0,
@@ -177,7 +223,7 @@ const CoverLetterPage = () => {
     flexDirection: 'column',
     alignItems: 'center',
     paddingTop: '12px',
-    justifyContent: 'space-between', 
+    justifyContent: 'space-between',
   }}
 >
   <img
@@ -190,41 +236,49 @@ const CoverLetterPage = () => {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      gap: '70px', 
+      gap: '70px',
       marginTop: 'auto',
       marginBottom: 'auto',
     }}
   >
     <Tooltip title="Home" placement="right">
-      <Link href="/" passHref> 
-        <IconButton sx={{ color: 'white' }} component="a">
-          <Home />
-        </IconButton>
-      </Link>
+      <IconButton
+        sx={{ color: 'white' }}
+        component={Link}
+        href="/"
+      >
+        <Home />
+      </IconButton>
     </Tooltip>
     <Tooltip title="Job Matching" placement="right">
-      <Link href={href} passHref>
-        <IconButton sx={{ color: 'white' }} component="a">
-          <WorkIcon />
-        </IconButton>
-      </Link>
+      <IconButton
+        sx={{ color: 'white' }}
+        component={Link}
+        href={href}
+      >
+        <WorkIcon />
+      </IconButton>
     </Tooltip>
     <Tooltip title="Cover Letter Generator" placement="right">
-      <Link href="/coverletter" passHref> 
-        <IconButton sx={{ color: 'white' }} component="a">
-          <DescriptionIcon />
-        </IconButton>
-      </Link>
+      <IconButton
+        sx={{ color: 'white' }}
+        component={Link}
+        href="/coverletter"
+      >
+        <DescriptionIcon />
+      </IconButton>
     </Tooltip>
   </Box>
-
   <Tooltip title="Logout" placement="right">
-          <IconButton sx={{ color: 'white', marginBottom: '15px' }} onClick={handleLogout}>
-            <Logout />
-          </IconButton>
-        </Tooltip>
-
+    <IconButton
+      sx={{ color: 'white', marginBottom: '15px' }}
+      onClick={handleLogout}
+    >
+      <Logout />
+    </IconButton>
+  </Tooltip>
 </Box>
+
       <Box sx={{ display: "flex", flexDirection: "column", marginLeft: "70px", minHeight: "100vh", backgroundColor: "#f4f4f4" }}>
         <Typography
           variant="h4"
@@ -362,6 +416,7 @@ const CoverLetterPage = () => {
           </Button>
         </Box>
       </Modal>
+    
     </Box>
   );
 };

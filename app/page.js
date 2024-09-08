@@ -238,10 +238,7 @@ export default function Home() {
             paragraph 
             sx={{ color: 'grey.800' }} 
           >
-            The Resume Job Description Match tool allows you to quickly compare your existing resume
-            to the job description of any role. Get an instant match score with a breakdown of how well
-            your resume aligns with the language, keywords, and skills from the job. See how your resume
-            stacks up to any job.
+            The Resume Job Description Match tool quickly compares your resume to any job description, providing an instant match score and a detailed alignment breakdown. It also offers personalized improvement suggestions and a roadmap to help you boost your match score.
           </Typography>
           <Link href={jobHref} passHref>
             <Button 
@@ -271,9 +268,9 @@ export default function Home() {
           }}
         >
           <img 
-            src="https://cdn.prod.website-files.com/627c8700df0be67c4b1d533c/653160804efedd9911371dfb_Hero_JDMatch-p-500.png" 
+            src="Screenshot 2024-09-08 175837.png" 
             alt="Example" 
-            style={{ width: '500px', height: 'auto', borderRadius: '8px' }} 
+            style={{ width: '450px', height: '230px', borderRadius: '8px' }} 
           />
         </Box>
       </Box>
@@ -290,7 +287,7 @@ export default function Home() {
           }}
         >
           <img 
-            src="Screenshot 2024-09-05 210702.png" 
+            src="Screenshot 2024-09-08 175837.png" 
             alt="Example" 
             style={{ width: '550px', height: '250px', borderRadius: '8px' }} 
           />
@@ -905,4 +902,3 @@ export default function Home() {
     </div>
   );
 }
-

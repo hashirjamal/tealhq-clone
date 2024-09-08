@@ -9,7 +9,7 @@ try{
 
     let body = await req.json();
 
-    console.log(body)
+    // console.log(body)
 
     const {jd} = body;
 
@@ -45,7 +45,7 @@ try{
         finalRes+=`${res.metadata.meta} \n`        
     }
     
-    console.log(finalRes+"POST JS RESPONSE");
+    // console.log(finalRes+"POST JS RESPONSE");
 
 
     return NextResponse.json({status:"Succes",message:"Resume uploaded successfully",data:finalRes});

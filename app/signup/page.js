@@ -3,10 +3,10 @@ import React, { useState } from 'react';
 import { styled, keyframes } from '@mui/material/styles';
 import { TextField, Button, Typography,CircularProgress, IconButton, Snackbar, Alert } from '@mui/material';
 import Link from 'next/link';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '/firebase.config';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from '/firebase.config';
 
 
 const fadeIn = keyframes`

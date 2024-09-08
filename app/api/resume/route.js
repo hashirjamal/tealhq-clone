@@ -10,7 +10,12 @@ export async function POST(req){
     try{
         
         const formData = await req.formData();
+        
+        console.log("Form Data ",formData)
         const file = formData.get('file');
+        const id = formData.get('id');
+
+        
     
         const buffer = Buffer.from(await file.arrayBuffer());
         let res = await pdf(buffer)
@@ -32,8 +37,8 @@ export async function POST(req){
         })
 
         // console.log(refinedArr)
-
-       await embedResume(refinedArr,"Abc123")
+      
+       await embedResume(refinedArr,id)
 
       
         return NextResponse.json({status:"Succes",message:"Resume uploaded successfully",data:""});

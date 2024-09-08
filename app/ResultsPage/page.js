@@ -1,17 +1,15 @@
 // to run this page, link:
-// http://localhost:3000/ResultsPage?response=%7B%0A++%22job_description%22%3A+%7B%0A++++%22title%22%3A+%22Data+Analyst%22%2C%0A++++%22company_name%22%3A+null%2C%0A++++%22location%22%3A+null%2C%0A++++%22role%22%3A+null%2C%0A++++%22skills_required%22%3A+%5B%0A++++++%22Strong+foundation+in+statistics+and+practical+experience+with+statistical+software+%28e.g.%2C+Excel%2C+SPSS%2C+SAS%29%22%2C%0A++++++%22Mastery+in+data+analysis+languages+including+SQL%2C+Python%2C+and+R%22%2C%0A++++++%22Exceptional+analytical+abilities+to+compile%2C+structure%2C+examine%2C+and+present+substantial+data+sets+with+precision%22%2C%0A++++++%22Ability+to+critically+evaluate+data+to+derive+meaningful%2C+actionable+insights%22%2C%0A++++++%22Superior+communication+and+presentation+skills%2C+with+the+ability+to+simplify+complex+data+insights+for+non-technical+audiences%22%2C%0A++++++%22Bachelor%E2%80%99s+degree+in+Computer+Science%2C+Information+Management%2C+Statistics%2C+or+a+related+discipline%22%0A++++%5D%0A++%7D%2C%0A++%22match%22%3A+%7B%0A++++%22overall_score%22%3A+0.44%2C%0A++++%22structure_score%22%3A+0.5%2C%0A++++%22results_score%22%3A+0.45%2C%0A++++%22keyword_score%22%3A+0.39%0A++%7D%2C%0A++%22hard_skills%22%3A+%7B%0A++++%22available%22%3A+%5B%0A++++++%22Programming+languages+such+as+Python%2C+JavaScript%2C+and+Java%22%2C%0A++++++%22Next.js+and+React.js%22%2C%0A++++++%22Node.js%2C+Express.js%2C+and+databases%22%2C%0A++++++%22SQL%22%0A++++%5D%2C%0A++++%22lacking%22%3A+%5B%0A++++++%22Statistics+and+practical+experience+with+statistical+software+%28e.g.%2C+Excel%2C+SPSS%2C+SAS%29%22%2C%0A++++++%22Mastery+in+data+analysis+languages+including+SQL%2C+Python%2C+and+R%22%2C%0A++++++%22Data+analysis+experience%22%0A++++%5D%0A++%7D%2C%0A++%22soft_skills%22%3A+%7B%0A++++%22available%22%3A+%5B%0A++++++%22Communication+and+presentation+skills%22%2C%0A++++++%22Analytical+abilities%22%0A++++%5D%2C%0A++++%22lacking%22%3A+%5B%0A++++++%22Superior+communication+and+presentation+skills%2C+with+the+ability+to+simplify+complex+data+insights+for+non-technical+audiences%22%2C%0A++++++%22Exceptional+analytical+abilities%22%0A++++%5D%0A++%7D%2C%0A++%22work_experience%22%3A+%7B%0A++++%22relevant%22%3A+%5B%0A++++++%7B%0A++++++++%22title%22%3A+%22Software+Engineering+Fellow%22%2C%0A++++++++%22company_name%22%3A+%22Headstarter+Al%22%2C%0A++++++++%22location%22%3A+%22USA%22%2C%0A++++++++%22role%22%3A+%22Software+Engineering+Fellow%22%2C%0A++++++++%22skills%22%3A+%5B%0A++++++++++%22ReactJS%22%2C%0A++++++++++%22NextJS%22%2C%0A++++++++++%22Ollama+Al%22%2C%0A++++++++++%22ChatGPT+Al+API%22%2C%0A++++++++++%22ML%22%0A++++++++%5D%0A++++++%7D%2C%0A++++++%7B%0A++++++++%22title%22%3A+%22Machine+Learning+Intern%22%2C%0A++++++++%22company_name%22%3A+%22Jinnah+Lincoln+Foundation%22%2C%0A++++++++%22location%22%3A+%22USA%22%2C%0A++++++++%22role%22%3A+%22Machine+Learning+Intern%22%2C%0A++++++++%22skills%22%3A+%5B%0A++++++++++%22Machine+learning%22%2C%0A++++++++++%22Data+science%22%0A++++++++%5D%0A++++++%7D%2C%0A++++++%7B%0A++++++++%22title%22%3A+%22Java+Springboot+Intern%22%2C%0A++++++++%22company_name%22%3A+%22EvantageSoft+Private+limited%22%2C%0A++++++++%22location%22%3A+%22Khi%2C+Pakistan%22%2C%0A++++++++%22role%22%3A+%22Java+Springboot+Intern%22%2C%0A++++++++%22skills%22%3A+%5B%0A++++++++++%22Java+development%22%2C%0A++++++++++%22APIs+using+Spring+Boot%22%0A++++++++%5D%0A++++++%7D%0A++++%5D%0A++%7D%2C%0A++%22resume_improvements%22%3A+%5B%0A++++%22Include+statistics+and+practical+experience+with+statistical+software+%28e.g.%2C+Excel%2C+SPSS%2C+SAS%29%22%2C%0A++++%22Highlight+mastery+in+data+analysis+languages+including+SQL%2C+Python%2C+and+R%22%2C%0A++++%22Emphasize+exceptional+analytical+abilities+and+ability+to+critically+evaluate+data%22%2C%0A++++%22Mention+experience+with+data+analysis+and+presentation%22%0A++%5D%0A%7D#
-
+// http://localhost:3000/ResultsPage?response=%7B%0A%20%20%22job_description%22%3A%20%7B%0A%20%20%20%20%22title%22%3A%20%22Data%20Analyst%22%2C%0A%20%20%20%20%22company_name%22%3A%20%22%22%2C%0A%20%20%20%20%22location%22%3A%20%22%22%2C%0A%20%20%20%20%22role%22%3A%20%22Data%20Analyst%22%2C%0A%20%20%20%20%22skills_required%22%3A%20%5B%0A%20%20%20%20%20%20%22data%20quality%20and%20integrity%22%2C%0A%20%20%20%20%20%20%22data%20management%22%2C%0A%20%20%20%20%20%20%22reporting%20processes%22%2C%0A%20%20%20%20%20%20%22data%20scraping%22%2C%0A%20%20%20%20%20%20%22data%20interpretation%22%2C%0A%20%20%20%20%20%20%22complex%20analysis%22%2C%0A%20%20%20%20%20%20%22database%20management%22%2C%0A%20%20%20%20%20%20%22SQL%22%2C%0A%20%20%20%20%20%20%22Python%22%2C%0A%20%20%20%20%20%20%22statistics%22%2C%0A%20%20%20%20%20%20%22data%20analysis%22%2C%0A%20%20%20%20%20%20%22data%20visualization%22%0A%20%20%20%20%5D%0A%20%20%7D%2C%0A%20%20%22match%22%3A%20%7B%0A%20%20%20%20%22overall_score%22%3A%200.61%2C%0A%20%20%20%20%22structure_score%22%3A%200.6%2C%0A%20%20%20%20%22results_score%22%3A%200.45%2C%0A%20%20%20%20%22keyword_score%22%3A%200.67%0A%20%20%7D%2C%0A%20%20%22roadmap%22%3A%20%7B%0A%20%20%20%20%22step%201%22%3A%20%5B%0A%20%20%20%20%20%20%22Learn%20SQL%20and%20Python%22%2C%0A%20%20%20%20%20%20%22Practice%20statistical%20techniques%22%2C%0A%20%20%20%20%20%20%22Familiarize%20with%20data%20visualization%20tools%22%0A%20%20%20%20%5D%2C%0A%20%20%20%20%22step%202%22%3A%20%5B%0A%20%20%20%20%20%20%22Develop%20skills%20in%20data%20scraping%20and%20web%20scraping%22%2C%0A%20%20%20%20%20%20%22Create%20a%20data%20pipeline%20for%20data%20analysis%22%2C%0A%20%20%20%20%20%20%22Practice%20data%20analysis%20on%20a%20real-world%20project%22%0A%20%20%20%20%5D%2C%0A%20%20%20%20%22step%203%22%3A%20%5B%0A%20%20%20%20%20%20%22Improve%20data%20visualization%20skills%22%2C%0A%20%20%20%20%20%20%22Develop%20a%20data%20storytelling%20approach%22%2C%0A%20%20%20%20%20%20%22Learn%20advanced%20statistical%20methods%22%0A%20%20%20%20%5D%2C%0A%20%20%20%20%22step%204%22%3A%20%5B%0A%20%20%20%20%20%20%22Develop%20a%20project%20on%20data%20analysis%20with%20real-world%20impact%22%2C%0A%20%20%20%20%20%20%22Create%20a%20data%20dashboard%20for%20stakeholder%20presentation%22%2C%0A%20%20%20%20%20%20%22Refine%20data%20analysis%20skills%20in%20R%20or%20other%20software%22%0A%20%20%20%20%5D%0A%20%20%7D%2C%0A%20%20%22resume_improvements%22%3A%20%5B%0A%20%20%20%20%22Include%20specific%20examples%20of%20data%20analysis%20work%22%2C%0A%20%20%20%20%22Quantify%20unnecessary%20skills%20(e.g.%2C%20%27machine%20learning%27%20without%20specifying%20type)%22%2C%0A%20%20%20%20%22Eliminate%20irrelevant%20sections%20(e.g.%2C%20personal%20projects%20unrelated%20to%20data%20analysis)%22%0A%20%20%5D%0A%7D#
 
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
 import { Box, Stack, Paper, Tabs, Tab, Link, Typography, IconButton, Tooltip} from '@mui/material';
-import CheckIcon from '@mui/icons-material/Check';
-import { Home, Description, Drafts, Logout } from '@mui/icons-material';
-import CloseIcon from '@mui/icons-material/Close';
+import { Home, Logout } from '@mui/icons-material';
 import { Chart } from 'chart.js/auto';
 import WorkIcon from '@mui/icons-material/Work';
 import DescriptionIcon from '@mui/icons-material/Description';
+
 
 
 export default function ResultsPage() {
@@ -25,11 +23,8 @@ export default function ResultsPage() {
     const [companyName, setCompanyName] = useState('');
     const [tabValue, setTabValue] = useState(0); // State to handle tabs
     const [jobDescription, setJobDescription] = useState(null);
-    const [workExperience, setWorkExperience] = useState([]);
-    const [hardSkills, setHardSkills] = useState({ available: [], lacking: [] });
-    const [softSkills, setSoftSkills] = useState({ available: [], lacking: [] });
+    const [roadmap, setRoadMap] = useState([]);
     const [resumeImprovements, setResumeImprovements] = useState([]);
-    const [linkTag,setLinkTag] = useState("")
 
 
     const chartRef1 = useRef(null);
@@ -47,18 +42,24 @@ export default function ResultsPage() {
         if (responseParam) {
             try {
                 const parsedResponse = decodeURIComponent(responseParam);
-                let parsedResponseClean = parsedResponse.replace(/[\r\n]+/g, '').trim();
-                parsedResponseClean = parsedResponseClean.replace(/`/g, '').trim();
-                parsedResponseClean = parsedResponseClean.replace(/\\n/g, '').replace(/\\"/g, '').trim();
-                console.log(parsedResponseClean);
-                const parsedData = JSON.parse(parsedResponseClean);
+                console.log("response is:");
+                console.log(parsedResponse);
+
+                // Extract the JSON object from the string by isolating content within curly braces
+                let jsonStringMatch = parsedResponse.match(/\{[\s\S]*\}/);
+                let jsonString = jsonStringMatch ? jsonStringMatch[0] : null;
+
+                // Clean up the string: remove any newlines, backticks, escaped newlines, and escaped quotes
+                jsonString = jsonString.replace(/[\r\n]+/g, '').trim();
+                jsonString = jsonString.replace(/`/g, '').trim();
+                jsonString = jsonString.replace(/\\n/g, '').replace(/\\"/g, '"').trim(); // Replace escaped quotes correctly
+                const parsedData = JSON.parse(jsonString);
+                console.log("response is as follows: ");
                 console.log(parsedData);
                 
                 // Extract and set data
                 setJobDescription(parsedData["job_description"]);
-                setWorkExperience(Object.values(parsedData["work_experience"]["relevant"][0]));
-                setHardSkills(parsedData["hard_skills"]);
-                setSoftSkills(parsedData["soft_skills"]);
+                setRoadMap(parsedData["roadmap"]);
                 setResumeImprovements(parsedData["resume_improvements"]);
 
                 const Role = parsedData["job_description"]?.title || 'No Job Title';
@@ -68,8 +69,9 @@ export default function ResultsPage() {
                 setCompanyName(company);
 
                 const responseScore = parsedData["match"]["overall_score"];
+                
                 if (!isNaN(responseScore)) {
-                    setScore(responseScore * 100);
+                    setScore(parseInt(responseScore * 100));
                 }
                 setScores({
                     structure_score: parsedData["match"].structure_score * 100,
@@ -243,9 +245,10 @@ export default function ResultsPage() {
             }}>
                 Role
             </Typography>
-            <Typography variant="body1" sx={{ mb: 2 }}>
-                {jobDescription?.role || 'Role not specified'}
-            </Typography>
+            <Typography variant="body1" sx={{ mb: 2, color: 'black' }}>
+  {jobDescription?.role || 'Role not specified'}
+</Typography>
+
             <Typography variant="h6" sx={{
                 fontWeight: 'bold',
                 fontSize: '1.25rem',
@@ -259,121 +262,7 @@ export default function ResultsPage() {
             </Typography>
         </Box>
     );
-    
 
-    const renderWorkExperienceTab = () => {
-        const renderWorkExperienceCard = (exp) => (
-            <Box sx={{
-                p: 3,
-                backgroundColor: '#fdfdfd',
-                borderRadius: '12px',
-                borderLeft: '10px solid #004d40',
-                borderRight: '10px solid #004d40',
-                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                width: '100%',
-                maxWidth: '400px', // Adjust width as needed
-                overflow: 'hidden',
-                mb: 2, // Margin bottom for spacing between rows
-                mx: 'auto',  // Horizontally center
-                mt: 'auto',  // Vertically center
-                
-            }}>
-                <Typography variant="h6" sx={{
-                    fontWeight: 'bold',
-                    fontSize: '1.25rem',
-                    color: '#004d40',
-                    mb: 1,
-                }}>
-                    {exp.title}
-                </Typography>
-                <Typography variant="body1">Company: {exp.company_name}</Typography>
-                <Typography variant="body1">Location: {exp.location}</Typography>
-                <Typography variant="body1">Role: {exp.role}</Typography>
-                <Typography variant="body1">Skills: {exp.skills.join(', ')}</Typography>
-            </Box>
-        );
-    
-        return (
-            <Box sx={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: 4, // Gap between cards
-                justifyContent: 'center',
-            }}>
-                {workExperience.map((exp, index) => (
-                    <Box key={index} sx={{ flex: '1 1 300px' }}>
-                        {renderWorkExperienceCard(exp)}
-                    </Box>
-                ))}
-            </Box>
-        );
-    };
-
-    const renderSkillsTab = () => {
-        const renderSkillsCard = (title, skills) => (
-            <Box sx={{
-                p: 3,
-                backgroundColor: '#fdfdfd',
-                borderRadius: '12px',
-                borderLeft: '10px solid #004d40',
-                borderRight: '10px solid #004d40',
-                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                width: '100%',
-                maxWidth: '450px',
-                overflow: 'hidden',
-            }}>
-                <Typography variant="h6" sx={{
-                    fontWeight: 'bold',
-                    fontSize: '1.5rem',
-                    color: '#004d40',
-                    mb: 2,
-                    textAlign: 'center',
-                }}>
-                    {title}
-                </Typography>
-                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                    {skills.map((skill, index) => (
-                        <Box key={index} sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            p: 1,
-                            borderBottom: '1px solid #ddd',
-                        }}>
-                            <Typography variant="body1">{skill.name}</Typography>
-                            {skill.status ? <CheckIcon sx={{ color: '#4caf50' }} /> : <CloseIcon sx={{ color: '#f44336' }} />}
-                        </Box>
-                    ))}
-                </Box>
-            </Box>
-        );
-    
-        const hardSkillsData = [
-            ...hardSkills.available.map(skill => ({ name: skill, status: true })),
-            ...hardSkills.lacking.map(skill => ({ name: skill, status: false })),
-        ];
-    
-        const softSkillsData = [
-            ...softSkills.available.map(skill => ({ name: skill, status: true })),
-            ...softSkills.lacking.map(skill => ({ name: skill, status: false })),
-        ];
-    
-        return (
-            <Box sx={{
-                display: 'flex',
-                justifyContent: 'space-around',
-                flexWrap: 'wrap',
-                gap: 4, // Gap between cards
-            }}>
-                <Box sx={{ flex: '1 1 45%' }}>
-                    {renderSkillsCard('Hard Skills', hardSkillsData)}
-                </Box>
-                <Box sx={{ flex: '1 1 45%' }}>
-                    {renderSkillsCard('Soft Skills', softSkillsData)}
-                </Box>
-            </Box>
-        );
-    };
 
     const renderImprovementsTab = () => (
         <Box sx={{
@@ -426,41 +315,96 @@ export default function ResultsPage() {
         </Box>
     );
 
-    function getJobMatchingHref() {
-        if(!sessionStorage)
-            {
-              return '/login';
-            }
-        const storedUser = sessionStorage.getItem('user');
-      
-        if (storedUser) {
-          const userObject = JSON.parse(storedUser);
-          return userObject.userId ? '/jobmatching' : '/login';
-        }
+    const renderRoadMapCard = (stepTitle, tasks) => (
+        <Box sx={{
+            p: 3,
+            backgroundColor: '#fdfdfd',
+            borderRadius: '12px',
+            borderLeft: '10px solid #004d40',
+            borderRight: '10px solid #004d40',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+            width: '100%',
+            maxWidth: '400px', // Adjust width as needed
+            overflow: 'hidden',
+            mb: 2, // Margin bottom for spacing between rows
+            mx: 'auto', // Horizontally center
+            mt: 'auto', // Vertically center
+        }}>
+            <Typography variant="h6" sx={{
+                fontWeight: 'bold',
+                fontSize: '1.25rem',
+                color: '#004d40',
+                mb: 1,
+            }}>
+                {stepTitle}
+            </Typography>
+            {tasks.length > 0 && (
+                <Box sx={{ mt: 1 }}>
+                    <ul style={{ listStyleType: 'disc', paddingLeft: '20px' }}>
+                        {tasks.map((task, index) => (
+                            <li key={index}>
+                                <Typography variant="body2">{task}</Typography>
+                            </li>
+                        ))}
+                    </ul>
+                </Box>
+            )}
+        </Box>
+    );
+    
+    // Function to render the roadmap tab
+    const renderRoadMapTab = () => {
+    
+        return (
+            <Box sx={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: 4, // Gap between cards
+                justifyContent: 'center',
+            }}>
+                {Object.keys(roadmap).map((stepTitle, index) => (
+                    <Box key={index} sx={{ flex: '1 1 300px' }}>
+                        {renderRoadMapCard(stepTitle, roadmap[stepTitle])}
+                    </Box>
+                ))}
+            </Box>
+        );
+    };
 
-        return '/login'; // Default to /login if no user is stored
+    function getJobMatchingHref() {
+        // if(!sessionStorage)
+        //     {
+        //       return '/login';
+        //     }
+        // const storedUser = sessionStorage.getItem('user');
+      
+        // if (storedUser) {
+        //   const userObject = JSON.parse(storedUser);
+        //   return userObject.userId ? '/jobmatching' : '/login';
+        // }
+
+        return '/jobmatching'; // Default to /login if no user is stored
       }
 
     function getCoverLetterHref() {
 
-        if(!sessionStorage)
-            {
-              return '/login';
-            }
-        const storedUser = sessionStorage.getItem('user');
+        // if(!sessionStorage)
+        //     {
+        //       return '/login';
+        //     }
+        // const storedUser = sessionStorage.getItem('user');
       
-        if (storedUser) {
-          const userObject = JSON.parse(storedUser);
-          return userObject.userId ? '/coverletter' : '/login';
-        }
+        // if (storedUser) {
+        //   const userObject = JSON.parse(storedUser);
+        //   return userObject.userId ? '/coverletter' : '/login';
+        // }
     
-        return '/login'; // Default to /login if no user is stored
+        return '/coverletter'; // Default to /login if no user is stored
       }
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh", backgroundColor: "#f4f4f4" }}>
-      
-        ;
+   
   
   <Box
     sx={{
@@ -496,21 +440,21 @@ export default function ResultsPage() {
     >
       <Tooltip title="Home" placement="right">
         <Link href="/" passHref> 
-          <IconButton sx={{ color: 'white' }} component="a">
+          <IconButton sx={{ color: 'white' }} >
             <Home />
           </IconButton>
         </Link>
       </Tooltip>
       <Tooltip title="Job Matching" placement="right">
         <Link href={getJobMatchingHref()} passHref> 
-          <IconButton sx={{ color: 'white' }} component="a">
+          <IconButton sx={{ color: 'white' }} >
             <WorkIcon />
           </IconButton>
         </Link>
       </Tooltip>
       <Tooltip title="Cover Letter Generator" placement="right">
         <Link href={getCoverLetterHref()} passHref> 
-          <IconButton sx={{ color: 'white' }} component="a">
+          <IconButton sx={{ color: 'white' }} >
             <DescriptionIcon />
           </IconButton>
         </Link>
@@ -519,7 +463,7 @@ export default function ResultsPage() {
   
     <Tooltip title="Logout" placement="right">
     <Link href="/login" passHref> 
-          <IconButton sx={{ color: 'white',marginBottom:'15px' }} component="a">
+          <IconButton sx={{ color: 'white',marginBottom:'15px' }} >
             <Logout />
           </IconButton>
           </Link>
@@ -600,15 +544,13 @@ export default function ResultsPage() {
             <Box sx={{ mt: 3 }}>
                 <Tabs value={tabValue} onChange={handleChange} centered>
                     <Tab label={<Link href="#" underline="none" sx={{ color: '#004d40', fontWeight: 'bold' }}>Job Description</Link>} />
-                    <Tab label={<Link href="#" underline="none" sx={{ color: '#004d40', fontWeight: 'bold' }}>Work Experience</Link>} />
-                    <Tab label={<Link href="#" underline="none" sx={{ color: '#004d40', fontWeight: 'bold' }}>Skills</Link>} />
+                    <Tab label={<Link href="#" underline="none" sx={{ color: '#004d40', fontWeight: 'bold' }}>Road Map</Link>} />
                     <Tab label={<Link href="#" underline="none" sx={{ color: '#004d40', fontWeight: 'bold' }}>Improvements</Link>} />
                 </Tabs>
                 <Box sx={{ p: 2 }}>
                     {tabValue === 0 && renderJobDescriptionTab()}
-                    {tabValue === 1 && renderWorkExperienceTab()}
-                    {tabValue === 2 && renderSkillsTab()}
-                    {tabValue === 3 && renderImprovementsTab()}
+                    {tabValue === 1 && renderRoadMapTab()}
+                    {tabValue === 2 && renderImprovementsTab()}
                 </Box>
             </Box>
             </Box>
