@@ -45,6 +45,16 @@ const pc = new Pinecone({
 
 const index = pc.index("teal-hq-resume-store");
 
+
+const getUser = await index.namespace(`user ${id}`).listPaginated();
+// const getUser = await index.namespace(`user ${id}removeMe`).listPaginated();
+console.log("Namespace values in pinecone",getUser);
+
+if(getUser.vectors.length>0){   
+  index.namespace(`user ${id}`).deleteAll();
+    }
+
+
 // console.log(vectorArr);
 
 let response = await index.namespace(`user ${id}`).upsert(
