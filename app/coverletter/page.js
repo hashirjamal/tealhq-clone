@@ -32,9 +32,8 @@ const CoverLetterPage = () => {
   
   const [jobTitle, setJobTitle] = useState("");
   const [jobDescription, setJobDescription] = useState("");
-  const [resume, setResume] = useState("");
   const [company, setCompany] = useState("");
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [coverLetter, setCoverLetter] = useState("");
   const [resumeMissing, setResumeMissing] = useState(false);
 
@@ -45,7 +44,6 @@ const CoverLetterPage = () => {
     phone: "",
     email: "",
   });
-
 
   const postJd = async (jd)=>{
     try{
@@ -64,11 +62,16 @@ const CoverLetterPage = () => {
           "Content-Type": "application/json"
         }})
         
-        // console.log(dt.data.data,"POST JS RESPONSE");
+        console.log(dt.data.data,"POST JS RESPONSE");
+        console.log(dt.data.status);
         // alert("postJd successful");
         if(dt.data.status=="Error"){
+
+          console.log("finally");
           console.log(dt.data)
-          alert("Please go to job matching page and upload your resume first")
+          setResumeMissing(true);
+          // showResumeMissingModal(resumeMissing, setResumeMissing, getJobMatchingHref);
+          // alert("Please go to job matching page and upload your resume first")
           return
         }
 
@@ -142,95 +145,78 @@ const genResult = async (jd,resume,isCoverLetter)=>{
 //       setLoading(false);
 //     }
     let data = {
-          "name": "[YOUR NAME]",
-          "address": "[City, Country]",
-          "phone": "[YOUR CONTACT NO.]",
-          "email": "[YOUR EMAIL]",
-          "jobTitle": "[JOB TITLE]",
-          "coverLetter": "[DUMMY DATA] I am writing to express my interest in the Data Analyst position at your esteemed organization. As a detail-oriented and analytical individual with a strong foundation in programming languages such as Python, JavaScript, and Java, I am confident that I would be an excellent fit for this role. With a proven track record of delivering high-quality results in a timely manner, I am well-equipped to transform raw data into structured information and drive strategic decision-making. My experience in working with Node.js, Express.js, and databases has also honed my skills in data analysis and interpretation. Furthermore, my participation in the NFL Big Data Bowl 2024 has given me hands-on experience in analyzing complex datasets and producing actionable business insights. I am particularly drawn to this role because of the opportunity to apply my analytical skills to drive business growth and improvement. In my previous roles, I have consistently demonstrated my ability to work under pressure, meet tight deadlines, and communicate complex data insights to non-technical audiences. I am excited about the prospect of joining your team and contributing my skills and expertise to drive success. I am confident that my unique blend of technical skills, analytical abilities, and passion for data analysis make me an ideal candidate for this position."
+          "name": "",
+          "address": "",
+          "phone": "",
+          "email": "",
+          "jobTitle": "",
+          "coverLetter": "."
       };
 
   return data;
 };
 
-  useEffect(() => {
-    const loadData = async () => {
-      // call the api here and load the entire response in fetchData() response after converting to JSON format.
-      const data = await fetchData();
-      setJobTitle(data.jobTitle);
-      setCompany(data.address); 
-      setUserInfo(data)
-      // setUserInfo(prevInfo => ({
-      //   ...prevInfo,
-      //   name: data.name || prevInfo.name,
-      //   address: data.address || prevInfo.address,
-      //   phone: data.phone || prevInfo.phone,
-      //   email: data.email || prevInfo.email
-      // }));
-      setCoverLetter(`Dear Hiring Manager, 
-      ${data.coverLetter}
-      // Sincerely,
-      // ${data.name}`); 
-    };
-    loadData();
-  }, []);
+useEffect(() => {
+  const loadData = async () => {
+    // Call the API here and load the entire response in fetchData() response after converting to JSON format.
+    const data = await fetchData();
+    setJobTitle(data.jobTitle);
+    setCompany(data.address);
+    setUserInfo(data);
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  const handleGenerate = async () => {
-
-
-    
-
-
-
-
-    let llmRes = await postJd();
-    
-    console.log(llmRes)
-    if(!llmRes){
-       return}
-    llmRes = JSON.parse(llmRes)
-
-    // setUserInfo(prevInfo => ({
-    
-    //   name: llmRes.name!=""? llmRes.name : prevInfo.name,
-    //   address: "",
-    //   phone: llmRes.phone!=""? llmRes.phone : prevInfo.phone,
-    //   email: llmRes.email!=""? llmRes.email : prevInfo.email,
-   
-    // }));
-
-    setJobTitle(llmRes.jobTitle)
-
-
-    setCoverLetter(
-      `${llmRes.coverLetter}`
-    ); // call the api here again
-    handleClose();
+    // Setting the cover letter
+    setCoverLetter(`Dear Hiring Manager, 
+${data.coverLetter}
+`);
   };
+  
+  loadData();
+}, []);
 
-  const handleExportPDF = () => {
-    const doc = new jsPDF();
+const handleOpen = () => setOpen(true);
+const handleClose = () => setOpen(false);
 
-    doc.setFontSize(22);
-    doc.setTextColor(0, 77, 64); 
-    doc.text(`${jobTitle} Cover Letter`, 105, 30, null, null, "center");
+const handleGenerate = async () => {
+  let llmRes = await postJd();
+  
+  console.log(llmRes);
+  if (!llmRes) return;
 
-    doc.setDrawColor(0, 77, 64); 
-    doc.setLineWidth(1);
-    doc.rect(10, 40, 190, 250); 
-    doc.setFontSize(12);
-    doc.setTextColor(0, 0, 0);
-    // doc.text(`${userInfo.name}`, 15, 60);
-    // doc.text(`${userInfo.address}`, 15, 68);
-    // doc.text(`${userInfo.phone} • ${userInfo.email}`, 15, 76);
+  llmRes = JSON.parse(llmRes);
 
-    doc.setFontSize(12);
-    doc.text(coverLetter, 15, 50, { maxWidth: 180 }); 
-    doc.save(`${jobTitle} - ${company} Cover Letter.pdf`);
-  };
+  // Set job title and cover letter after fetching from API
+  setJobTitle(llmRes.jobTitle);
+  setCoverLetter(`Dear Hiring Manager, 
+${llmRes.coverLetter}
+`);
+
+  handleClose();
+};
+
+const handleExportPDF = () => {
+  const doc = new jsPDF();
+
+  doc.setFontSize(22);
+  doc.setTextColor(0, 77, 64);
+  doc.text(`${jobTitle} Cover Letter`, 105, 30, null, null, "center");
+
+  doc.setDrawColor(0, 77, 64);
+  doc.setLineWidth(1);
+  doc.rect(10, 40, 190, 250);
+
+  doc.setFontSize(17);
+  doc.setTextColor(0, 0, 0);
+  
+  // Include user information in the PDF
+  // doc.text(`${userInfo.name}`, 15, 60);
+  // doc.text(`${userInfo.address}`, 15, 68);
+  // doc.text(`${userInfo.phone} • ${userInfo.email}`, 15, 76);
+
+  doc.setFontSize(12);
+  doc.text(coverLetter, 15, 50, { maxWidth: 180 });
+  doc.save("Cover_Letter.pdf");
+};
+
 
   // function getJobMatchingHref() {
   //   const storedUser = sessionStorage.getItem('user');
@@ -367,7 +353,7 @@ const genResult = async (jd,resume,isCoverLetter)=>{
             }}
           >
             <Typography variant="h6" gutterBottom sx={{ color: "#004d40", fontWeight: "bold", marginBottom: "10px",fontSize:'1.4rem'}}>
-              {jobTitle} - {company}
+              {jobTitle} 
             </Typography>
             <Button variant="contained" sx={{ backgroundColor: "#FFB100", mb: 3 }} onClick={handleOpen}>
               Switch Job
@@ -474,9 +460,44 @@ const genResult = async (jd,resume,isCoverLetter)=>{
         </Box>
       </Modal>
     
+
+      <Modal open={resumeMissing} onClose={() => 
+      {
+        setResumeMissing(false)
+        window.location.href = '/jobmatching'
+      }
+      }>
+      <Box
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: 400,
+          bgcolor: "background.paper",
+          boxShadow: 24,
+          p: 4,
+          borderRadius: "8px",
+          textAlign: "center",
+          color:'black'
+        }}
+      >
+        <Typography variant="h6" gutterBottom>
+          Resume not found! Please upload your resume to continue.
+        </Typography>
+        <Button
+          variant="contained"
+          sx={{ backgroundColor: "#FFB100", color: "#004d40", fontWeight: "bold" }}
+          onClick={() => {
+            window.location.href = getJobMatchingHref();
+          }}
+          >
+          OK
+        </Button>
+      </Box>
+      </Modal>
     </Box>
   );
 };
 
 export default CoverLetterPage;
-

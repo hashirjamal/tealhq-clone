@@ -156,7 +156,7 @@ const Login = () => {
         // setProgresspercent(progress);
       },
       (error) => {
-        alert(error);
+        // alert(error);
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
@@ -164,7 +164,7 @@ const Login = () => {
           setCvUrl(downloadURL);
 
           const docRef = await doc(db, 'cvResumes', id); // 'cvResumes' is the collection name
-    
+          console.log("Document reference:", docRef);
     // Add data to the document with the custom ID
     await setDoc(docRef, data);
     

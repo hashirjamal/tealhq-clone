@@ -268,7 +268,7 @@ export default function Home() {
           }}
         >
           <img 
-            src="Screenshot 2024-09-08 175837.png" 
+            src="Screenshot 2024-09-08 211910.png" 
             alt="Example" 
             style={{ width: '450px', height: '230px', borderRadius: '8px' }} 
           />
@@ -287,7 +287,7 @@ export default function Home() {
           }}
         >
           <img 
-            src="Screenshot 2024-09-08 175837.png" 
+            src="https://cdn.prod.website-files.com/62775a91cc3db44c787149de/6632783ca3fa68d1cfe745be_cover-letter-genrator.webp" 
             alt="Example" 
             style={{ width: '550px', height: '250px', borderRadius: '8px' }} 
           />
