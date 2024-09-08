@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { storage,db } from "@/firebase.config";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
-import {doc,getDoc,collection} from "firebase/firestore";
+import {doc,getDoc,collection, addDoc,setDoc} from "firebase/firestore";
 import { Modal } from "@mui/material";
 import {
   Typography,
@@ -159,9 +159,16 @@ const Login = () => {
         alert(error);
       },
       () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+        getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
           console.log(downloadURL)
           setCvUrl(downloadURL);
+
+          const docRef = await doc(db, 'cvResumes', id); // 'cvResumes' is the collection name
+    
+    // Add data to the document with the custom ID
+    await setDoc(docRef, data);
+    
+
         });
       }
     );
@@ -257,7 +264,7 @@ window.location.href = `/ResultsPage?response=${encodedData}`;
   
     if (file.type === "application/pdf") {
       // renderPDFToCanvas(file);
-      renderPDFToCanvas("https://firebasestorage.googleapis.com/v0/b/teal-hq-clone.appspot.com/o/files%2Fundefined?alt=media&token=9de82931-fc18-44c0-8fe5-2275f7641ccd");
+      renderPDFToCanvas(file);
       await postResume(file);
     } else if (
       file.type ===

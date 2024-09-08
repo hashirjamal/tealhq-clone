@@ -66,6 +66,13 @@ const CoverLetterPage = () => {
         
         // console.log(dt.data.data,"POST JS RESPONSE");
         // alert("postJd successful");
+        if(dt.data.status=="Error"){
+          console.log(dt.data)
+          alert("Please go to job matching page and upload your resume first")
+          return
+        }
+
+
         let cvContent = dt.data.data;
 
         let summarizedVersion = await sendToLLM(jobDescription,cvContent);
@@ -152,14 +159,14 @@ const genResult = async (jd,resume,isCoverLetter)=>{
       const data = await fetchData();
       setJobTitle(data.jobTitle);
       setCompany(data.address); 
-      
-      setUserInfo(prevInfo => ({
-        ...prevInfo,
-        name: data.name || prevInfo.name,
-        address: data.address || prevInfo.address,
-        phone: data.phone || prevInfo.phone,
-        email: data.email || prevInfo.email
-      }));
+      setUserInfo(data)
+      // setUserInfo(prevInfo => ({
+      //   ...prevInfo,
+      //   name: data.name || prevInfo.name,
+      //   address: data.address || prevInfo.address,
+      //   phone: data.phone || prevInfo.phone,
+      //   email: data.email || prevInfo.email
+      // }));
       setCoverLetter(`Dear Hiring Manager, 
       ${data.coverLetter}
       // Sincerely,
@@ -180,9 +187,23 @@ const genResult = async (jd,resume,isCoverLetter)=>{
 
 
     let llmRes = await postJd();
-
+    
     console.log(llmRes)
+    if(!llmRes){
+       return}
     llmRes = JSON.parse(llmRes)
+
+    // setUserInfo(prevInfo => ({
+    
+    //   name: llmRes.name!=""? llmRes.name : prevInfo.name,
+    //   address: "",
+    //   phone: llmRes.phone!=""? llmRes.phone : prevInfo.phone,
+    //   email: llmRes.email!=""? llmRes.email : prevInfo.email,
+   
+    // }));
+
+    setJobTitle(llmRes.jobTitle)
+
 
     setCoverLetter(
       `${llmRes.coverLetter}`
