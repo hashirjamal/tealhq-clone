@@ -196,7 +196,7 @@ export default function Home() {
             </Button>
           </Link>
 
-          <Link href="/login" passHref>
+          <Link href={jobHref} passHref>
             <Button 
               variant="outlined" 
               sx={{
@@ -290,9 +290,9 @@ export default function Home() {
           }}
         >
           <img 
-            src="https://cdn.prod.website-files.com/627c8700df0be67c4b1d533c/653160804efedd9911371dfb_Hero_JDMatch-p-500.png" 
+            src="Screenshot 2024-09-05 210702.png" 
             alt="Example" 
-            style={{ width: '500px', height: 'auto', borderRadius: '8px' }} 
+            style={{ width: '550px', height: '250px', borderRadius: '8px' }} 
           />
         </Box>
         <Box maxWidth="600px" sx={{ ml: '40px' }}>
@@ -607,7 +607,8 @@ export default function Home() {
       </Grid>
       
     </Box>
-    <Button
+    <Link href={jobHref} passHref>
+     <Button
   variant="contained"
   sx={{
     mt: 9,
@@ -628,8 +629,9 @@ export default function Home() {
         },
   }}
 >
-  Match Your Resume to a Specific Job
+  Match your resume to specific job
 </Button>
+     </Link>
 
   </Container>
 </Box>
@@ -856,7 +858,9 @@ export default function Home() {
     </Grid>
   </Container>
 
+  
   <Box sx={{ mt: 8, display: 'flex', justifyContent: 'center' }}>
+  <Link href={jobHref} passHref>
   <Button
     variant="contained"
     color="warning"
@@ -891,6 +895,9 @@ export default function Home() {
       No credit card required, ever.
     </Typography>
   </Button>
+</Link>
+
+  
 </Box>
 
 </Box>
