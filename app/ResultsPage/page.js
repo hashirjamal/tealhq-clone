@@ -41,14 +41,19 @@ export default function ResultsPage() {
         if (responseParam) {
             try {
                 const parsedResponse = decodeURIComponent(responseParam);
-                console.log("response is:")
-                console.log(parsedResponse)
-                let parsedResponseClean = parsedResponse.replace(/[\r\n]+/g, '').trim();
-                parsedResponseClean = parsedResponseClean.replace(/`/g, '').trim();
-                parsedResponseClean = parsedResponseClean.replace(/\\n/g, '').replace(/\\"/g, '').trim();
-                // console.log(parsedResponseClean);
-                const parsedData = JSON.parse(parsedResponseClean);
-                console.log("response is as follows: ")
+                console.log("response is:");
+                console.log(parsedResponse);
+
+                // Extract the JSON object from the string by isolating content within curly braces
+                let jsonStringMatch = parsedResponse.match(/\{[\s\S]*\}/);
+                let jsonString = jsonStringMatch ? jsonStringMatch[0] : null;
+
+                // Clean up the string: remove any newlines, backticks, escaped newlines, and escaped quotes
+                jsonString = jsonString.replace(/[\r\n]+/g, '').trim();
+                jsonString = jsonString.replace(/`/g, '').trim();
+                jsonString = jsonString.replace(/\\n/g, '').replace(/\\"/g, '"').trim(); // Replace escaped quotes correctly
+                const parsedData = JSON.parse(jsonString);
+                console.log("response is as follows: ");
                 console.log(parsedData);
                 
                 // Extract and set data

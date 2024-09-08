@@ -24,7 +24,7 @@ export async function POST(req){
             res2 = await summarizeContent(resumeContent,200,500)
         }
 
-        console.log(res,res2)
+        // console.log(res,res2)
         return NextResponse.json({status:"Success",message:"",data:{jd:res.summary_text,resume:res2.summary_text}})
     }
     catch(e){

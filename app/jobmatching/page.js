@@ -96,7 +96,6 @@ const Login = () => {
     return res.data;
   }
 
-
   const sendToLLM = async(jd,resumeContent)=>{
     const res = await axios.post("/api/summarize",{
       jd,
@@ -121,7 +120,7 @@ const Login = () => {
           "Content-Type": "application/json"
         }})
         
-        // console.log(dt.data.data,"POST JS RESPONSE");
+        console.log(dt.data.data,"POST JS RESPONSE");
         // alert("postJd successful");
         let cvContent = dt.data.data;
 
@@ -166,6 +165,7 @@ window.location.href = `/ResultsPage?response=${encodedData}`;
   const handleFileUpload = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
+    console.log("file uploaded")
     setIsFileUploaded(true);
     if (!jobDescription) {
       setSnackbarOpen(true);
