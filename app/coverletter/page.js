@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { Pinecone } from '@pinecone-database/pinecone';
 import { Button, Box, Typography, Modal,IconButton,TextareaAutosize,Tooltip, TextField, Paper } from "@mui/material";
 import { jsPDF } from "jspdf";
 import { Home, Description, Drafts, Logout } from '@mui/icons-material';
@@ -48,11 +49,16 @@ const CoverLetterPage = () => {
 
   const postJd = async (jd)=>{
     try{
+      let user = sessionStorage.getItem("user");
+      
+      let id = sessionStorage.getItem("user");
+    id = JSON.parse(id).userId;
       console.log("Calling cover letter");
       // setIsLoading(true);
       // const segments = jd.split('\n\n');
       const dt = await axios.post("/api/job-desc",{
-        jd:jobDescription
+        jd:jobDescription,
+        id
       }, {
         headers: {
           "Content-Type": "application/json"
@@ -103,15 +109,39 @@ const genResult = async (jd,resume,isCoverLetter)=>{
 
 
 
-const fetchData = async () => {
-  const data = {
-    "name": "Muhammad Ali",
-    "address": "Karachi, Pakistan",
-    "phone": "0333-2135600",
-    "email": "MuhammadAli@cloud.neduet.edu.pk",
-    "jobTitle": "Data Analyst",
-    "coverLetter": "I am writing to express my interest in the Data Analyst position at your esteemed organization. As a detail-oriented and analytical individual with a strong foundation in programming languages such as Python, JavaScript, and Java, I am confident that I would be an excellent fit for this role. With a proven track record of delivering high-quality results in a timely manner, I am well-equipped to transform raw data into structured information and drive strategic decision-making. My experience in working with Node.js, Express.js, and databases has also honed my skills in data analysis and interpretation. Furthermore, my participation in the NFL Big Data Bowl 2024 has given me hands-on experience in analyzing complex datasets and producing actionable business insights. I am particularly drawn to this role because of the opportunity to apply my analytical skills to drive business growth and improvement. In my previous roles, I have consistently demonstrated my ability to work under pressure, meet tight deadlines, and communicate complex data insights to non-technical audiences. I am excited about the prospect of joining your team and contributing my skills and expertise to drive success. I am confident that my unique blend of technical skills, analytical abilities, and passion for data analysis make me an ideal candidate for this position."
-  };
+  const fetchData = async () => {
+    // const response = await fetch('/api/your-endpoint');
+    // const data = await response.json();
+
+//     try {
+//       const res = await fetch('/api', {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({ jd: prompt, resume:resume , isCoverLetter: true}),
+//       });
+
+//       if (!res.ok) {
+//         throw new Error('Failed to fetch data from the API');
+//       }
+
+//       const data = await res.json();
+//       console.log(data)
+
+//     } catch (error: any) {
+//       setError(error.message);
+//     } finally {
+//       setLoading(false);
+//     }
+    let data = {
+          "name": "[YOUR NAME]",
+          "address": "[City, Country]",
+          "phone": "[YOUR CONTACT NO.]",
+          "email": "[YOUR EMAIL]",
+          "jobTitle": "[JOB TITLE]",
+          "coverLetter": "[DUMMY DATA] I am writing to express my interest in the Data Analyst position at your esteemed organization. As a detail-oriented and analytical individual with a strong foundation in programming languages such as Python, JavaScript, and Java, I am confident that I would be an excellent fit for this role. With a proven track record of delivering high-quality results in a timely manner, I am well-equipped to transform raw data into structured information and drive strategic decision-making. My experience in working with Node.js, Express.js, and databases has also honed my skills in data analysis and interpretation. Furthermore, my participation in the NFL Big Data Bowl 2024 has given me hands-on experience in analyzing complex datasets and producing actionable business insights. I am particularly drawn to this role because of the opportunity to apply my analytical skills to drive business growth and improvement. In my previous roles, I have consistently demonstrated my ability to work under pressure, meet tight deadlines, and communicate complex data insights to non-technical audiences. I am excited about the prospect of joining your team and contributing my skills and expertise to drive success. I am confident that my unique blend of technical skills, analytical abilities, and passion for data analysis make me an ideal candidate for this position."
+      };
 
   return data;
 };
@@ -132,8 +162,8 @@ const fetchData = async () => {
       }));
       setCoverLetter(`Dear Hiring Manager, 
       ${data.coverLetter}
-      Sincerely,
-      ${data.name}`); 
+      // Sincerely,
+      // ${data.name}`); 
     };
     loadData();
   }, []);
@@ -143,10 +173,16 @@ const fetchData = async () => {
 
   const handleGenerate = async () => {
 
+
+    
+
+
+
+
     let llmRes = await postJd();
 
-    llmRes = JSON.parse(llmRes)
     console.log(llmRes)
+    llmRes = JSON.parse(llmRes)
 
     setCoverLetter(
       `${llmRes.coverLetter}`
@@ -166,12 +202,12 @@ const fetchData = async () => {
     doc.rect(10, 40, 190, 250); 
     doc.setFontSize(12);
     doc.setTextColor(0, 0, 0);
-    doc.text(`${userInfo.name}`, 15, 60);
-    doc.text(`${userInfo.address}`, 15, 68);
-    doc.text(`${userInfo.phone} • ${userInfo.email}`, 15, 76);
+    // doc.text(`${userInfo.name}`, 15, 60);
+    // doc.text(`${userInfo.address}`, 15, 68);
+    // doc.text(`${userInfo.phone} • ${userInfo.email}`, 15, 76);
 
     doc.setFontSize(12);
-    doc.text(coverLetter, 15, 90, { maxWidth: 180 }); 
+    doc.text(coverLetter, 15, 50, { maxWidth: 180 }); 
     doc.save(`${jobTitle} - ${company} Cover Letter.pdf`);
   };
 
@@ -365,12 +401,12 @@ const fetchData = async () => {
                 wordBreak: "break-word", 
               }}
             >
-              <Typography variant="h6" sx={{ fontWeight: "bold", color: "#004d40" }}>
-                {userInfo.name}
-              </Typography>
-              <Typography sx={{ marginBottom: "10px" }}>
+              {/* <Typography variant="h6" sx={{ fontWeight: "bold", color: "#004d40" }}>
+                {userInfo.name} */}
+              {/* </Typography> */}
+              {/* <Typography sx={{ marginBottom: "10px" }}>
                 {userInfo.address} • {userInfo.phone} • {userInfo.email}
-              </Typography>
+              </Typography> */}
               {coverLetter}
             </Box>
             <Button

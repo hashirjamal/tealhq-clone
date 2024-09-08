@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { storage } from "@/firebase.config";
+import { storage,db } from "@/firebase.config";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import {doc,getDoc,collection} from "firebase/firestore";
 import { Modal } from "@mui/material";
 import {
   Typography,
@@ -53,6 +54,7 @@ const Login = () => {
   const canvasContainerRef = useRef();
   const [open,setOpen] = useState(false);
   const [href, setHref] = useState('/login'); // Add state for href
+  const [cvUrl,setCvUrl] = useState(null);
 
   useEffect(() => {
     const result = getJobMatchingHref();
@@ -60,8 +62,35 @@ const Login = () => {
   }, []);
   useEffect(() => {
     AOS.init({ duration: 800 });
-     pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.mjs'
+    //  pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.mjs'
     // pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.mjs";
+    // pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.mjs";
+    pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.mjs';
+    const getResume = async ()=>{
+
+      
+  
+      
+      let id = sessionStorage.getItem("user");
+    id = JSON.parse(id).userId;
+    // check if there's a pdf stroed agains the current user if yes then call the renderPdf functiona and pass that url
+    const docSnap = await getDoc(doc(db,"userResumes",id));
+    
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+
+      renderPDFToCanvas(docSnap.data().cv);
+      setIsFileUploaded(true);
+    } else {
+      // docSnap.data() will be undefined in this case
+      console.log("No such document!");
+    }
+  }
+
+   getResume();
+
+
+
   }, []);
 
   const postResume = async (file)=>{
@@ -132,6 +161,7 @@ const Login = () => {
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           console.log(downloadURL)
+          setCvUrl(downloadURL);
         });
       }
     );
@@ -139,6 +169,7 @@ const Login = () => {
 
 
   const sendToLLM = async(jd,resumeContent)=>{
+    console.log("parameter of resumeCOntent "+resumeContent)
     const res = await axios.post("/api/summarize",{
       jd,
       resumeContent
@@ -155,8 +186,11 @@ const Login = () => {
     try{
       setIsLoading(true);
       // const segments = jd.split('\n\n');
+      let id = sessionStorage.getItem("user");
+      id = JSON.parse(id).userId
       const dt = await axios.post("/api/job-desc",{
-        jd
+        jd,
+        id
       }, {
         headers: {
           "Content-Type": "application/json"
@@ -164,11 +198,18 @@ const Login = () => {
         
         console.log(dt.data.data,"POST JS RESPONSE");
         // alert("postJd successful");
+
+        console.log(dt.data )
+        if(dt.data.status=="Error"){
+          alert("Please go to job matching page and upload your resume first")
+          return
+        }
+
         let cvContent = dt.data.data;
 
         let summarizedVersion = await sendToLLM(jobDescription,cvContent);
 
-        // console.log(summarizedVersion,"Summarized version of JD and Resume");
+        console.log(summarizedVersion,"Summarized version of JD and Resume");
 
         const finalRes = await genResult(summarizedVersion.jd,summarizedVersion.resume)
 
@@ -216,7 +257,7 @@ window.location.href = `/ResultsPage?response=${encodedData}`;
   
     if (file.type === "application/pdf") {
       // renderPDFToCanvas(file);
-      renderPDFToCanvas("https://firebasestorage.googleapis.com/v0/b/teal-hq-clone.appspot.com/o/files%2FHashir%20Jamal%20Khan%20CV.pdf?alt=media&token=c728b793-d792-461b-81d4-560980306cf9");
+      renderPDFToCanvas("https://firebasestorage.googleapis.com/v0/b/teal-hq-clone.appspot.com/o/files%2Fundefined?alt=media&token=9de82931-fc18-44c0-8fe5-2275f7641ccd");
       await postResume(file);
     } else if (
       file.type ===
@@ -234,13 +275,18 @@ window.location.href = `/ResultsPage?response=${encodedData}`;
   const renderPDFToCanvas = async (fileOrUrl) => {
     try {
       let typedArray;
+
+      console.log("rendering pdf " +fileOrUrl)
   
       // Check if input is a file or URL
       if (typeof fileOrUrl === 'string') {
         // Fetch PDF from URL
-        let response = await axios.get(fileOrUrl);
-        response = response.data;
+        let response = await axios.get(fileOrUrl, {
+          responseType: 'blob', // Important to set this to 'blob' to handle binary data
+        });
+    
         console.log(response);
+        response = response.data;
         const arrayBuffer = await response.arrayBuffer();
         typedArray = new Uint8Array(arrayBuffer);
       } else {
@@ -280,52 +326,13 @@ window.location.href = `/ResultsPage?response=${encodedData}`;
   
         canvas.style.marginBottom = "2px";
         canvasContainerRef.current.appendChild(canvas);
+        console.log("rendering done")
       }
     } catch (error) {
       setFileContent(`Error reading file: ${error.message}`);
     }
   };
   
-
-
-
-
-  // const renderPDFToCanvas = async (file) => {
-  //   try {
-  //     const reader = new FileReader();
-  //     reader.onload = async (e) => {
-  //       const typedArray = new Uint8Array(e.target.result);
-  //       const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise;
-
-  //       canvasContainerRef.current.innerHTML = "";
-
-  //       const scale = 0.9;
-
-  //       for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-  //         const page = await pdf.getPage(pageNum);
-  //         const viewport = page.getViewport({ scale });
-
-  //         const canvas = document.createElement("canvas");
-  //         const context = canvas.getContext("2d");
-  //         canvas.height = viewport.height;
-  //         canvas.width = viewport.width;
-
-  //         const renderContext = {
-  //           canvasContext: context,
-  //           viewport: viewport,
-  //         };
-  //         await page.render(renderContext).promise;
-
-  //         canvas.style.marginBottom = "2px";
-
-  //         canvasContainerRef.current.appendChild(canvas);
-  //       }
-  //     };
-  //     reader.readAsArrayBuffer(file);
-  //   } catch (error) {
-  //     setFileContent(`Error reading file: ${error.message}`);
-  //   }
-  // };
 
   const readDOCX = async (file) => {
     try {
